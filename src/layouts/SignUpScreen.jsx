@@ -126,7 +126,7 @@ const styles = StyleSheet.create({
   },
   headerText: {
     fontSize: 24,
-    paddingTop: 32.2,
+    paddingTop: 32.2
     //fontFamily: 'Poppins-Bold'
   },
   headerText2: {
@@ -135,7 +135,7 @@ const styles = StyleSheet.create({
   },
   fields: {
     paddingTop: 22,
-    marginBottom: 10,
+    marginBottom: 10
   },
   input: {
     width: 327,
@@ -149,7 +149,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-araound',
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: 10,
+    marginBottom: 10
   },
   checkbox: {
     width: 20,
@@ -159,7 +159,7 @@ const styles = StyleSheet.create({
     borderRadius: 3,
     justifyContent: 'center',
     alignItems: 'center',
-    marginRight: 10,
+    marginRight: 10
   },
   checkmark: {
     color: '#fff',
@@ -173,22 +173,21 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     paddingStart: 24,
     paddingEnd: 24,
-    borderRadius: 20,
-
+    borderRadius: 20
   },
   loginText: {
     fontSize: 14,
     color: '#454B60',
     fontWeight: 'bold',
-    marginLeft: 5,
+    marginLeft: 5
   },
    logo: {
     width: 100,
     height: 100,
-    marginBottom: 20,
+    marginBottom: 20
   },
   TextButton: {
     color: 'white',
-    fontWeight: 'bold',
+    fontWeight: 'bold'
   },
 });
