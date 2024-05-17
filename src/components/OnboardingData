@@ -1,0 +1,25 @@
+//Aqui sao adicionadas as paginas do onboarding. Ao adicionar um bloco novo, ela aparecerá automaticamente no carrosel
+const pages = [
+    {
+        title: 'FeedUp',
+        subtitle: 'FeedUp é uma \nplataforma desenvolvida \npara feedbacks entre \ncolaboradores',
+        image: require('../assets/images/cards/card-phone-chat.png'), // Imagem da primeira página
+    },
+    {
+        title: 'FeedUp',
+        subtitle: 'A realização de \nfeedbacks pelo FeedUp \nnão tem o intuito de \ndescartar avaliações \nformais de desempenho',
+        image: require('../assets/images/cards/card-chating.png'), // Imagem da segunda página
+    },
+    {
+        title: 'FeedUp',
+        subtitle: 'Feedbacks construtivos \nsão incentivados, mas \nprocure sempre manter \no respeito com outros \ncolaboradores',
+        image: require('../assets/images/cards/card-respect.png'), // Imagem da terceira página
+    },
+    {
+        title: 'FeedUp',
+        subtitle: 'Engajar com os \nfeedbacks te proporciona \nbonificações e maior \nprestígio na plataforma',
+        image: require('../assets/images/cards/card-benefits.png'), // Imagem da quarta página
+    },
+];
+
+export default pages;

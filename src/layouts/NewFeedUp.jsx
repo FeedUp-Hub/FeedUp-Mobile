@@ -2,54 +2,50 @@ import React, { useState } from 'react';
 import { View, Text, TextInput, StyleSheet, TouchableOpacity, Image } from 'react-native';
 import {Picker} from '@react-native-picker/picker';
 import { useNavigation } from '@react-navigation/native';
+import styles from '../styles/PagesStyles'
 
 export default function NewFeedUp() {
-  const navigation = useNavigation("Home");
+  const navigation = useNavigation();
 
   const [recipient, setRecipient] = useState('');
   const [message, setMessage] = useState('');
-  const [anonymous, setAnonymous] = useState(false);
+  const [isAnonymous, setIsAnonymous] = useState('');
   const [value, setValue] = useState(''); //inicializacao da variavel do menu dropdown
-
-  const handleSubmit = () => {
-    //MUDAR AQUI PARA SETAR INFOS VIA API PARA A BASE DE DADOS
-    console.log('Recipient:', recipient);
-    console.log('Value:', value);
-    console.log('Message:', message);
-    console.log('Anonymous:', anonymous);
-  };
-
-  const toggleMensagemAnonima = () => {
-    setAnonymous(!anonymous);
-  };
 
   const saveFeedUp = () => {
     //Verifica se dados estao sendo inseridos
-    if (!recipient.trim() || !message.trim() || value != '') {
-      alert('Por favor, verifique se você preencheu todos os campos.');     
+    if (!recipient.trim() || !message.trim() ) {
+      alert('Por favor, verifique se você preencheu todos os campos.');
     return}
 
     {/*AJUSTAR PARA ENVIAR FEEDUP VIA API PARA BASE DE DADOS*/}
     console.log('Recipient:', recipient);
     console.log('Message:', message);
-    console.log('anonymous:', anonymous);
+    console.log('Valor:', value);
+    console.log('Anonymous:', setIsAnonymous);
+
+    navigation.navigate('Thank You');
   };
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.headerText}>Deixe um feedback para outro colaborador</Text>
-      <Text style={styles.subtitle}>Espalhe o reconhecimento! Deixe um feedback, positivo ou construtivo, para um colaborador da sua equipe com base nos valores da empresa.</Text>
-      
+    <View style={styles.containerNewFeedup}>
+
+
+
+      <Text style={styles.headerTextNewFeedup}NewFeedup>Deixe um feedback para um colaborador</Text>
+      <Text style={styles.subtitleNewFeedup}>Espalhe o reconhecimento! Deixe um feedback,{'\n'}positivo ou construtivo, para um colaborador da {'\n'}sua equipe com base nos valores da empresa.</Text>
+
       <TextInput
-        style={styles.input}
-        placeholder="E-mail do colega que receberá seu FeedUp:"
+        style={styles.inputNewFeedup}
+        placeholder="Menção"
         value={recipient}
         onChangeText={setRecipient}
       />
 
       {/* Menu dropdown de valores */}
-      <Picker style={styles.picker} selectedValue={value} onValueChange={(itemValue) => setValue(itemValue)} >
-        <Picker.Item label="Valores de Cultura:" value="" />
+      <View style={styles.pickerGeralNewFeedup}>
+      <Picker selectedValue={value} onValueChange={(itemValue) => setValue(itemValue)} numberOfLines={3} >
+        <Picker.Item label="Comportamento atribuído" value="" />
         <Picker.Item label="Se importa e cuida de todas as pessoas da comunidade." value="valor1" />
         <Picker.Item label="Tem a capacidade de dialogar com pares, liderados e lideranças sobre estratégias,
                             metas e o que é necessário para alcançá-las." value="valor2" />
@@ -82,104 +78,29 @@ export default function NewFeedUp() {
         <Picker.Item label="Ajuda a construir um ambiente de trabalho cada dia mais agradável e produtivo." value="valor22" />
         <Picker.Item label="Sempre fomenta novas experiências para surpreender os clientes nas entregas." value="valor23" />
       </Picker>
-      
+      </View>
+
       <TextInput
-        style={[styles.input, styles.textArea]}
+        style={[styles.inputNewFeedup, styles.textAreaNewFeedup]}
         multiline
         numberOfLines={4}
-        placeholder="Deixe seu feedback:"
+        placeholder="Deixe aqui o seu feedback"
         value={message}
         onChangeText={setMessage}
-      />    
-      
-      {/* Define mensagem anonim */}
-      <TouchableOpacity onPress={toggleMensagemAnonima} style={styles.checkboxContainer}>
-        <View style={[styles.checkbox, { backgroundColor: anonymous ? '#007bff' : '#fff' }]}>
-            {anonymous && <Text style={styles.checkmark}>✓</Text>}
-        </View>
-        <Text style={styles.label}>Enviar mensagem anônima</Text>
+      />
+
+      {/* Define mensagem anonima */}
+      <View style={styles.pickerGeralNewFeedup}>
+        <Picker style={styles.pickerNewFeedup} selectedValue={isAnonymous} onValueChange={(itemValue) => setIsAnonymous(itemValue)} >
+          <Picker.Item label="Visibilidade" value="" />
+          <Picker.Item label="Não (default)" value={false} />
+          <Picker.Item label="Sim" value={true} />
+        </Picker>
+       </View>
+
+      <TouchableOpacity style={styles.buttonNewFeedup} onPress={saveFeedUp}>
+        <Text style={styles.buttonTextNewFeedup}>Enviar FeedUp!</Text>
       </TouchableOpacity>
-    
-      <TouchableOpacity style={styles.button} onPress={saveFeedUp}>
-        <Text style={styles.buttonText}>Enviar Feedback!</Text>
-      </TouchableOpacity>
-      <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('Home')}>
-         <Text style={styles.buttonText}>Voltar</Text>
-     </TouchableOpacity>
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    padding: 20,
-    paddingTop: 113,
-    backgroundColor: '#fff',
-  },
-  headerText: {
-    fontSize: 24,
-  },
-  subtitle: {
-    fontSize: 16,
-    marginBottom: 20,
-    paddingTop: 10,
-    textAlign: 'justify'
-  },
-  input: {
-    height: 40,
-    borderColor: 'gray',
-    borderWidth: 1,
-    marginBottom: 10,
-    paddingHorizontal: 10,
-    borderRadius: 20,
-    backgroundColor: '#c2c2c2'
-  },
-  textArea: {
-    height: 100,
-    textAlignVertical: 'top'
-  },
-  checkboxContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginBottom: 10
-  },
-  button: {
-    backgroundColor: '#5271FF',
-    padding: 10,
-    borderRadius: 20,
-    alignItems: 'center',
-    marginBottom: 10,
-    marginTop: 10
-  },
-  buttonText: {
-    color: 'white',
-    fontWeight: 'bold',
-  },
-  checkbox: {
-    width: 20,
-    height: 20,
-    borderWidth: 1,
-    borderColor: '#ccc',
-    borderRadius: 3,
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginRight: 10
-  },
-  checkmark: {
-    color: '#fff',
-  },
-  logo: {
-    width: 100,
-    height: 100,
-    marginBottom: 20
-  },
-  picker: {
-  marginBottom: 10,
-  backgroundColor: '#c2c2c2',
-  borderRadius: 20,
-  borderWidth: 1,
-  borderColor: 'gray',
-  flexWrap: 'wrap'
-  },
-});

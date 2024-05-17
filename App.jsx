@@ -1,30 +1,32 @@
-// App.js
-
 import react from 'react';
 import { NavigationContainer } from '@react-navigation/native';
-import { createStackNavigator } from '@react-navigation/stack';
-import LoginScreen from './src/layouts/LoginScreen';
-import FeedScreen from './src/layouts/FeedScreen';
-import SignUpScreen from './src/layouts/SignUpScreen';
-import UsageTerms from './src/layouts/UsageTerms';
-import HomePage from './src/layouts/HomePage';
-import NewFeedUp from './src/layouts/NewFeedUp';
+import { useEffect, useState } from 'react';
+import { View, Text, Image } from 'react-native'
+import { useNavigation } from '@react-navigation/native';
 
-const Stack = createStackNavigator();
+import styles from './src/styles/PagesStyles';
 
-export default function App() {
-  return (
-    <NavigationContainer>
-        <Stack.Navigator initialRouteName="FeedScreen">
-          <Stack.Screen name="Login" component={LoginScreen} options={{ headerShown: false }} />
-          <Stack.Screen name="Cadastro" component={SignUpScreen} options={{ headerShown: false }} />
-          <Stack.Screen name="Termos de Uso" component={UsageTerms} options={{ headerShown: false }} />
-          <Stack.Screen name="Novo FeedUp" component={NewFeedUp} options={{ headerShown: false }} />
-            <Stack.Screen name="FeedScreen" component={FeedScreen} options={{ headerShown: false }} />
+import AppNavigation from './src/routes/AppNavigation';
 
-           {/* 1 = funcionario RH | 2 = Lider | 3 = comum */}
-          <Stack.Screen name="Home" component={HomePage} options={{ headerShown: false }} initialParams={{ personType: 1 }}/>
-        </Stack.Navigator>
-    </NavigationContainer>
-  );
+//Configuração da tela de splash
+const SplashScreen = () => {
+  return <View style={styles.splashLogo}>
+    <Image source={require('./src/assets/images/logos/splash-logo.png')} />
+    <Text style={styles.splashTitle}>FeedUp</Text>
+  </View>
 }
+function App() {
+
+  const [isLoading, setIsLoading] = useState(true)
+
+  // Timer para tela de splash durar alguns segundos ao iniciar
+  useEffect(() => {const timeout = setTimeout(() => {setIsLoading(false)}, 2000)
+    return () => { clearTimeout(timeout) }
+  }, [])
+
+  if (isLoading)
+    return <SplashScreen />
+  return <AppNavigation initialRoute={'Login'} />
+}
+
+export default App;

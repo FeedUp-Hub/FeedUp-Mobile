@@ -17,7 +17,7 @@ export default function TabRoutes() {
       />
 
       <Tab.Screen
-      name="FeedScreen"
+      name="Home"
       component={FeedScreen}
       />
 

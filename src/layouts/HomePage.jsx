@@ -1,5 +1,6 @@
 import React from 'react';
 import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native';
+import styles from '../styles/PagesStyles';
 
 const HomePage = ({ route }) => {
   const { personType } = route.params;
