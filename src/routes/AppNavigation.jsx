@@ -1,7 +1,6 @@
 import React from 'react';
-
-import { createNativeStackNavigator } from '@react-navigation/native-stack'
-import { NavigationContainer } from '@react-navigation/native'
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { NavigationContainer } from '@react-navigation/native';
 
 import BottomTabNavigator from './BottomTabNavigator';
 import LoginScreen from '../layouts/LoginScreen';
@@ -10,12 +9,14 @@ import NewFeedUp from '../layouts/NewFeedUp';
 import OnboardingCarousel from '../layouts/OnboardingCarousel';
 
 const AppNavigation = ({ initialRoute }) => {
-
-    const Stack = createNativeStackNavigator()
+    const Stack = createNativeStackNavigator();
 
     return (
         <NavigationContainer>
-            <Stack.Navigator initialRouteName={initialRoute}>
+            <Stack.Navigator
+                initialRouteName={initialRoute}
+                screenOptions={{ headerShown: false }} // Adicionei essa linha
+            >
                 <Stack.Screen name="Onboarding" component={OnboardingCarousel} />
                 <Stack.Screen name="Login" component={LoginScreen} />
                 <Stack.Screen name="Home" component={BottomTabNavigator} />

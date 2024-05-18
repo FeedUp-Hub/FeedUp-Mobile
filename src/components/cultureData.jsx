@@ -1,0 +1,27 @@
+const cultureData = [
+  { id: '1', image: require('../assets/images/values/behavior-1.png'), text: 'Se importa e cuida de todas as pessoas da comunidade.' },
+  { id: '2', image: require('../assets/images/values/behavior-2.png'), text: 'Tem a capacidade de dialogar com pares, liderados e lideranças sobre estratégias, metas e o que é necessário para alcançá-las.' },
+  { id: '3', image: require('../assets/images/values/behavior-3.png'), text: 'Reconhece, respeita e empodera o bom trabalho e empenha os colegas em toda a esfera.' },
+  { id: '4', image: require('../assets/images/values/behavior-4.png'), text: 'Aposta na ideia que estar na ioasys significa transformar o mundo.' },
+  { id: '5', image: require('../assets/images/values/behavior-5.png'), text: 'Traz as melhores práticas do mercado para dentro da ioasys, tornando-as ainda melhores dentro do nosso ecossistema.' },
+  { id: '6', image: require('../assets/images/values/behavior-6.png'), text: 'Conduz a comunidade na direção do sucesso, sempre com muito engajamento e brilho no olho.' },
+  { id: '7', image: require('../assets/images/values/behavior-7.png'), text: 'Ajuda as pessoas a desenvolverem ainda mais as suas skills.' },
+  { id: '8', image: require('../assets/images/values/behavior-8.png'), text: 'Se torna técnica e profissionalmente a cada dia mais forte.' },
+  { id: '9', image: require('../assets/images/values/behavior-9.png'), text: 'Mensura e acompanha todas as etapas de projetos e processos para garantir ajustes rápidos.' },
+  { id: '10', image: require('../assets/images/values/behavior-10.png'), text: 'Busca conhecer e agir de forma étoca, respeitando todos os princípios de governança da ioasys e do grupo Alpargatas.' },
+  { id: '11', image: require('../assets/images/values/behavior-11.png'), text: 'Busca tornar os caminhos mais simples para obter resultados mais assertivos.' },
+  { id: '12', image: require('../assets/images/values/behavior-12.png'), text: 'É brilhante na tratatva de relacionamento com os clientes, fornecedores e outros cocriadores.' },
+  { id: '13', image: require('../assets/images/values/behavior-13.png'), text: 'Zela por um ambiente que abrace a diversidade e a pluraridade integralmete.' },
+  { id: '14', image: require('../assets/images/values/behavior-14.png'), text: 'Assume a responsabilidade de que sua jornada pessoal e comportamento ajudam a construir a ioasys que todos queremos ter.' },
+  { id: '15', image: require('../assets/images/values/behavior-15.png'), text: 'Entende que inovação deve estar presente em tudo, desde um simples texto até os projetos mais complexos.' },
+  { id: '16', image: require('../assets/images/values/behavior-16.png'), text: 'Entende que sustentabilidade não é só sobre ecologia, mas sim todos os aspectos que regem nossas vidas.' },
+  { id: '17', image: require('../assets/images/values/behavior-17.png'), text: 'Performa de forma surpreendente e acima do esperado.' },
+  { id: '18', image: require('../assets/images/values/behavior-18.png'), text: 'Possui conhecimento técnico notável e compartilha com as pessoas, tornando toda comunidade mais forte.' },
+  { id: '19', image: require('../assets/images/values/behavior-19.png'), text: 'Prioriza ritos ágeis em todas as ações do dia a dia.' },
+  { id: '20', image: require('../assets/images/values/behavior-20.png'), text: 'Acredita 100% na liberdade para errar e aprender.' },
+  { id: '21', image: require('../assets/images/values/behavior-21.png'), text: 'Acredita no poder do desenvolvimento pessoal e no aprendizado contínuo.' },
+  { id: '22', image: require('../assets/images/values/behavior-22.png'), text: 'Ajuda a construir um ambiente de trabalho mais agradável e produtivo.' },
+  { id: '23', image: require('../assets/images/values/behavior-23.png'), text: 'Sempre fomenta novas experiências para surpreender os clientes nas entregas.' },
+];
+
+export default cultureData;

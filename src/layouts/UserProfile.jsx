@@ -1,31 +1,108 @@
 import React from 'react';
-import { View, Text, Image} from 'react-native';
+import { View, Text, StyleSheet, Image } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 
 const UserProfiler = () => {
+    const navigation = useNavigation();
 
+    const userData = {
+        name: 'Nome do Usuário',
+        team: 'Equipe do Usuário',
+        profilePicture: require('../assets/image.png'), // Substitua pelo caminho da foto de perfil real
+        feedbacks: [
+            { id: 1, text: 'Feedback 1' },
+            { id: 2, text: 'Feedback 2' },
+            { id: 3, text: 'Feedback 3' },
+        ],
+    };
     return (
-        <View>
 
-            <Image  source={require('../assets/image.png')} />
-            <Text>Perfil</Text>
+        <View style={styles.container}>
+            {/* Perfil do usuário */}
+            <View style={styles.profileContainer}>
+                <View style={styles.profileContent}>
+                    <Image source={userData.profilePicture} style={styles.profilePicture} />
+                    <View style={styles.userInfo}>
+                        <Text style={styles.userName}>{userData.name}</Text>
+                        <Text style={styles.userTeam}>{userData.team}</Text>
+                    </View>
+                </View>
+            </View>
 
-            <Text >
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus interdum, felis eu maximus
-                convallis, dolor orci euismod velit, non tempus nunc arcu id lacus. Vestibulum aliquam magna non
-                justo tempor, ac malesuada nisi scelerisque. Duis nec ultrices nunc. Nullam volutpat vitae turpis ut
-                fringilla. Nullam pulvinar malesuada urna at dignissim. Cras auctor odio sit amet aliquet
-                vestibulum. Vivamus euismod magna et magna commodo, vel feugiat elit efficitur. Integer tempus quam
-                sit amet sapien dapibus, vel varius enim laoreet. Curabitur gravida eu mi nec rutrum. Vestibulum
-                convallis, risus in posuere cursus, libero justo dignissim dui, vel interdum tortor lectus nec leo.
-                In non arcu nisi. Morbi in semper mauris. Pellentesque habitant morbi tristique senectus et netus
-                et malesuada fames ac turpis egestas. Morbi bibendum auctor justo, sed consectetur magna consequat
-                ac. Duis efficitur, purus nec dapibus pellentesque, lorem arcu vestibulum nibh, sit amet eleifend
-                urna lorem vitae tellus.
-            </Text>
+            {/* Feedbacks */}
+            <View style={styles.feedbackContainer}>
+                <Text style={styles.feedbackTitle}>Seus Feedbacks</Text>
+                {userData.feedbacks.length > 0 ? (
+                    userData.feedbacks.map(feedback => (
+                        <Text key={feedback.id} style={styles.feedback}>{feedback.text}</Text>
+                    ))
+                ) : (
+                    <Text style={styles.noFeedback}>Nenhum feedback recebido ainda</Text>
+                )}
+            </View>
 
+            {/* Novo Feedback */}
+            <View style={styles.newFeedbackContainer}>
+                <Text style={styles.newFeedbackTitle}>New Feedback</Text>
+                {/* Componente NewFeedUp aqui */}
+            </View>
         </View>
+
     );
 };
+
+const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        paddingHorizontal: 20,
+        paddingTop: 40,
+        backGroundColor: '#FFFFFF',
+    },
+    profileContainer: {
+        marginBottom: 20,
+    },
+    profileContent: {
+        flexDirection: 'row',
+        alignItems: 'center',
+    },
+    profilePicture: {
+        width: 35,
+        height: 35,
+        borderRadius: 35,
+        marginRight: 10,
+    },
+    userInfo: {
+        flex: 1,
+    },
+    userName: {
+        fontSize: 18,
+        fontWeight: 'bold',
+        color: '#4B4B4B'
+    },
+    userTeam: {
+        fontSize: 12,
+        color: '#9C9C9C',
+    },
+    feedbackContainer: {
+        marginBottom: 20,
+    },
+    feedbackTitle: {
+        fontSize: 20,
+        fontWeight: 'bold',
+        marginBottom: 10,
+    },
+    feedback: {
+        fontSize: 16,
+        marginBottom: 5,
+    },
+    newFeedbackContainer: {
+        marginBottom: 20,
+    },
+    newFeedbackTitle: {
+        fontSize: 20,
+        fontWeight: 'bold',
+        marginBottom: 10,
+    },
+});
 
 export default UserProfiler;

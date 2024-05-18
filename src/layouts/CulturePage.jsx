@@ -1,53 +1,82 @@
 import React from 'react';
-import { View, Text, Image} from 'react-native';
-import { useNavigation } from '@react-navigation/native';
+import { View, Text, Image, StyleSheet, ScrollView } from 'react-native';
+import cultureData from '../components/cultureData';
 
 export default function CulturePage() {
+  return (
+    <ScrollView contentContainerStyle={styles.container}>
+      <Image source={require('../assets/images/logos/mini-logo.png')} style={styles.logo} />
+      <Text style={styles.title}>Ioasys</Text>
+      <Text style={styles.subtitle}>A ioasys é uma empresa de pessoas para pessoas, buscamos sempre garantir uma cultura de trabalho fidedigna disso, através dos nossos valores</Text>
+      <Text style={styles.subtitleBold}>Quais são os valores que compartilhamos?</Text>
 
-    return (
-        <View>
-
-            <Image  source={require('../assets/image.png')} />
-            <Text>Valores de cultura</Text>
-
-            <Text >
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus interdum, felis eu maximus
-                convallis, dolor orci euismod velit, non tempus nunc arcu id lacus. Vestibulum aliquam magna non
-                justo tempor, ac malesuada nisi scelerisque. Duis nec ultrices nunc. Nullam volutpat vitae turpis ut
-                fringilla. Nullam pulvinar malesuada urna at dignissim. Cras auctor odio sit amet aliquet
-                vestibulum. Vivamus euismod magna et magna commodo, vel feugiat elit efficitur. Integer tempus quam
-                sit amet sapien dapibus, vel varius enim laoreet. Curabitur gravida eu mi nec rutrum. Vestibulum
-                convallis, risus in posuere cursus, libero justo dignissim dui, vel interdum tortor lectus nec leo.
-                In non arcu nisi. Morbi in semper mauris. Pellentesque habitant morbi tristique senectus et netus
-                et malesuada fames ac turpis egestas. Morbi bibendum auctor justo, sed consectetur magna consequat
-                ac. Duis efficitur, purus nec dapibus pellentesque, lorem arcu vestibulum nibh, sit amet eleifend
-                urna lorem vitae tellus.
-
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus interdum, felis eu maximus
-                convallis, dolor orci euismod velit, non tempus nunc arcu id lacus. Vestibulum aliquam magna non
-                justo tempor, ac malesuada nisi scelerisque. Duis nec ultrices nunc. Nullam volutpat vitae turpis ut
-                fringilla. Nullam pulvinar malesuada urna at dignissim. Cras auctor odio sit amet aliquet
-                vestibulum. Vivamus euismod magna et magna commodo, vel feugiat elit efficitur. Integer tempus quam
-                sit amet sapien dapibus, vel varius enim laoreet. Curabitur gravida eu mi nec rutrum. Vestibulum
-                convallis, risus in posuere cursus, libero justo dignissim dui, vel interdum tortor lectus nec leo.
-                In non arcu nisi. Morbi in semper mauris. Pellentesque habitant morbi tristique senectus et netus
-                et malesuada fames ac turpis egestas. Morbi bibendum auctor justo, sed consectetur magna consequat
-                ac. Duis efficitur, purus nec dapibus pellentesque, lorem arcu vestibulum nibh, sit amet eleifend
-                urna lorem vitae tellus.
-
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus interdum, felis eu maximus
-                convallis, dolor orci euismod velit, non tempus nunc arcu id lacus. Vestibulum aliquam magna non
-                justo tempor, ac malesuada nisi scelerisque. Duis nec ultrices nunc. Nullam volutpat vitae turpis ut
-                fringilla. Nullam pulvinar malesuada urna at dignissim. Cras auctor odio sit amet aliquet
-                vestibulum. Vivamus euismod magna et magna commodo, vel feugiat elit efficitur. Integer tempus quam
-                sit amet sapien dapibus, vel varius enim laoreet. Curabitur gravida eu mi nec rutrum. Vestibulum
-                convallis, risus in posuere cursus, libero justo dignissim dui, vel interdum tortor lectus nec leo.
-                In non arcu nisi. Morbi in semper mauris. Pellentesque habitant morbi tristique senectus et netus
-                et malesuada fames ac turpis egestas. Morbi bibendum auctor justo, sed consectetur magna consequat
-                ac. Duis efficitur, purus nec dapibus pellentesque, lorem arcu vestibulum nibh, sit amet eleifend
-                urna lorem vitae tellus.
-            </Text>
-
-        </View>
-    );
+      {/* Valores da empresa*/}
+      {renderValores(cultureData)}
+    </ScrollView>
+  );
 };
+
+const renderValores = (data) => {
+  const valores = [];
+  for (let i = 0; i < data.length; i++) {
+    valores.push(
+      <View key={data[i].id} style={styles.box}>
+        <Image source={data[i].image} style={styles.boxLogo} />
+        <Text style={styles.boxText}>{data[i].text}</Text>
+      </View>
+    );
+  }
+  return valores;
+};
+
+const styles = StyleSheet.create({
+  container: {
+    flexGrow: 1,
+    alignItems: 'center',
+    padding: 20,
+    backgroundColor: '#fff',
+  },
+  logo: {
+    width: 50,
+    height: 50,
+    marginBottom: 20,
+  },
+  title: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    alignSelf: 'flex-start',
+    marginBottom: 10,
+  },
+  subtitle: {
+    fontSize: 12,
+    alignSelf: 'flex-start',
+    marginBottom: 10,
+  },
+  subtitleBold: {
+    fontSize: 12,
+    fontWeight: 'bold',
+    alignSelf: 'flex-start',
+    marginBottom: 20,
+  },
+  box: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#fff',
+    borderColor: '#000',
+    borderWidth: 1,
+    borderRadius: 23,
+    padding: 10,
+    marginBottom: 10,
+    width: '100%',
+  },
+  boxLogo: {
+    width: 40,
+    height: 40,
+    marginRight: 10,
+  },
+  boxText: {
+    fontSize: 16,
+    flexShrink: 1,
+    flexWrap: 'wrap',
+  },
+});

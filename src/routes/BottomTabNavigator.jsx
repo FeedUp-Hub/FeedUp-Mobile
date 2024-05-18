@@ -10,7 +10,7 @@ import homeIcon from '../assets/images/menu/homeIcon.png';
 import profileIcon from '../assets/images/menu/profileIcon.png';
 
 export default function BottomTabNavigator() {
-    const Tab = createBottomTabNavigator()
+    const Tab = createBottomTabNavigator();
 
     return (
         <Tab.Navigator initialRouteName='Home' screenOptions={{ headerShown: false }}>
@@ -28,7 +28,7 @@ export default function BottomTabNavigator() {
                 component={NewFeedUp}
                 options={{
                     tabBarIcon: ({ color, size }) => (
-                        <Image source={feedbackIcon} style={{ width: 24, height: 24, tintColor: 'black'  }} />
+                        <Image source={feedbackIcon} style={{ width: 24, height: 24, tintColor: 'black' }} />
                     ),
                 }}
             />
@@ -37,7 +37,7 @@ export default function BottomTabNavigator() {
                 component={Culture}
                 options={{
                     tabBarIcon: ({ color, size }) => (
-                        <Image source={cultureIcon} style={{ width: 24, height: 24, tintColor: 'black'  }} />
+                        <Image source={cultureIcon} style={{ width: 24, height: 24, tintColor: 'black' }} />
                     ),
                 }}
             />
@@ -46,10 +46,10 @@ export default function BottomTabNavigator() {
                 component={Profile}
                 options={{
                     tabBarIcon: ({ color, size }) => (
-                        <Image source={profileIcon} style={{ width: 24, height: 24, tintColor: 'black'  }} />
+                        <Image source={profileIcon} style={{ width: 24, height: 24, tintColor: 'black' }} />
                     ),
                 }}
             />
         </Tab.Navigator>
-    )
+    );
 }
