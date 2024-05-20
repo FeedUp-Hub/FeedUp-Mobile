@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { View, Text, TextInput, Button, StyleSheet, Image, TouchableOpacity } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import styles from '../styles/PagesStyles'
-//import FeedScreen from './FeedScreen';
 
 export default function LoginScreen() {
   const [username, setUsername] = useState('');

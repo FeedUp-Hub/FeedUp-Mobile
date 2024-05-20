@@ -7,32 +7,44 @@ import cardPhoneChat from '../assets/images/cards/card-phone-chat.png';
 import cardChating from '../assets/images/cards/card-chating.png';
 import cardRespect from '../assets/images/cards/card-respect.png';
 import cardBenefits from '../assets/images/cards/card-benefits.png';
+import AppLoading from "expo-app-loading";
+import { useFonts } from 'expo-font';
+import FONTS from "../styles/fonts/fonts";
 
 //A logica do carrossel está nessa funcao
 export default function OnboardingCarousel() {
     const navigation = useNavigation();
     const [pageIndex, setPageIndex] = useState(0);
 
+  let [fontsLoaded] = useFonts({
+    "Poppins-Regular": require("../assets/fonts/Poppins-Regular.ttf"),
+    "Poppins-Bold": require("../assets/fonts/Poppins-Bold.ttf"),
+  });
+
+  if (!fontsLoaded) {
+    return <AppLoading />;
+  }
+
     const pages = [
         {
             title: 'FeedUp',
             subtitle: 'FeedUp é uma \nplataforma desenvolvida \npara feedbacks entre \ncolaboradores',
-            image: cardPhoneChat, // TROCAR PARA IMAGEM DESSA PAGINA DO ONBOARDING
+            image: cardPhoneChat,
         },
         {
             title: 'FeedUp',
             subtitle: 'A realização de \nfeedbacks pelo FeedUp \nnão tem o intuito de \ndescartar avaliações \nformais de desempenho',
-            image: cardChating, // TROCAR PARA IMAGEM DESSA PAGINA DO ONBOARDING
+            image: cardChating,
         },
         {
             title: 'FeedUp',
             subtitle: 'Feedbacks construtivos \nsão incentivados, mas \nprocure sempre manter \no respeito com outros \ncolaboradores',
-            image: cardRespect, // TROCAR PARA IMAGEM DESSA PAGINA DO ONBOARDING
+            image: cardRespect,
         },
         {
             title: 'FeedUp',
             subtitle: 'Engajar com os \nfeedbacks te proporciona \nbonificações e maior \nprestígio na plataforma',
-            image: cardBenefits, // TROCAR PARA IMAGEM DESSA PAGINA DO ONBOARDING
+            image: cardBenefits,
         },
     ];
 

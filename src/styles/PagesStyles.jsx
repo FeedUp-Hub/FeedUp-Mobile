@@ -1,4 +1,6 @@
 import { StyleSheet } from 'react-native';
+import { useFonts } from 'expo-font';
+import AppLoading from 'expo-app-loading';
 
 const styles= StyleSheet.create({
   splashLogo: {
@@ -9,6 +11,7 @@ const styles= StyleSheet.create({
   },
   splashTitle: {
     fontSize: 24,
+    fontFamily: 'Poppins-Regular',
     fontWeight: 'bold',
     textAlign: 'left',
     paddingBottom: 50,
@@ -37,12 +40,14 @@ const styles= StyleSheet.create({
   titleLoginPage: {
     left: 20,
     fontSize: 24,
+    fontFamily: 'Poppins-Regular',
     fontWeight: 'bold',
     textAlign: 'center',
     paddingBottom: 50,
   },
   titleSecondaryLoginPage: {
     fontSize: 15,
+    fontFamily: 'Poppins-Regular',
     textAlign: 'left',
     paddingLeft: 20,
   },
@@ -63,6 +68,7 @@ const styles= StyleSheet.create({
   forgotTextLoginPage: {
     alignSelf: 'flex-end',
     fontSize: 14,
+    fontFamily: 'Poppins-Regular',
     color: '#333',
     marginBottom: 10,
 
@@ -78,6 +84,7 @@ const styles= StyleSheet.create({
   buttonTextLoginPage: {
     color: '#fff',
     fontSize: 18,
+    fontFamily: 'Poppins-Regular',
   },
   containerOnboarding: {
     flex: 1,
@@ -95,6 +102,7 @@ const styles= StyleSheet.create({
   },
   headerOnboarding: {
     fontSize: 25,
+    fontFamily: 'Poppins-Regular',
     color: '#ffffff',
     flexDirection: 'row',
     alignItems: 'center',
@@ -103,6 +111,7 @@ const styles= StyleSheet.create({
   },
   navButtonOnboarding: {
     fontSize: 24,
+    fontFamily: 'Poppins-Regular',
     color: '#ffffff',
   },
   disabledOnboarding: {
@@ -126,6 +135,7 @@ const styles= StyleSheet.create({
   },
   titleOnboarding: {
     fontSize: 20,
+    fontFamily: 'Poppins-Regular',
     color: 'black',
     fontWeight: 'bold',
   },
@@ -134,7 +144,7 @@ const styles= StyleSheet.create({
     paddingTop: 10,
     fontSize: 20,
     color: '#FFFFFF',
-    fontFamily: 'Poppins_400Regular',
+    fontFamily: 'Poppins-Regular',
   },
   contentOnboarding: {
     flex: 1,
@@ -173,12 +183,14 @@ const styles= StyleSheet.create({
   nextButtonTextOnboarding: {
     color: '#ffffff',
     fontSize: 18,
+    fontFamily: 'Poppins-Regular',
   },
   textOnboarding: {
     paddingTop: 10,
     paddingLeft: 10,
     color: '#ffffff',
     fontSize: 25,
+    fontFamily: 'Poppins-Regular',
   },
   containerHome: {
     flex: 1,
@@ -204,16 +216,19 @@ const styles= StyleSheet.create({
   },
   menuTextHome: {
     fontSize: 18,
+    fontFamily: 'Poppins-Regular',
     fontWeight: 'bold',
     textAlign: 'center',
   },
   titleHome: {
     fontSize: 24,
+    fontFamily: 'Poppins-Regular',
     marginBottom: 20,
     fontWeight: 'bold',
   },
   titleSecondaryHome: {
     fontSize: 15,
+    fontFamily: 'Poppins-Regular',
     marginBottom: 60,
     textAlign: 'center',
   },
@@ -223,6 +238,7 @@ const styles= StyleSheet.create({
   },
   footerTextHome: {
     fontSize: 12,
+    fontFamily: 'Poppins-Regular',
     color: '#888',
   },
   containerSignup: {
@@ -236,6 +252,7 @@ const styles= StyleSheet.create({
   },
   headerTextSignup: {
     fontSize: 24,
+    fontFamily: 'Poppins-Regular',
   },
   fieldsSignup: {
     marginBottom: 10,
@@ -245,6 +262,7 @@ const styles= StyleSheet.create({
     height: 35,
     padding: 10,
     fontSize: 12,
+    fontFamily: 'Poppins-Regular',
     borderRadius: 20,
     borderColor: 'black',
     backgroundColor: 'gray',
@@ -281,6 +299,7 @@ const styles= StyleSheet.create({
   },
   loginTextSignup: {
     fontSize: 14,
+    fontFamily: 'Poppins-Regular',
     color: '#454B60',
     fontWeight: 'bold',
     marginLeft: 5,
@@ -302,10 +321,12 @@ const styles= StyleSheet.create({
   },
   headerTextNewFeedup: {
     fontSize: 24,
+    fontFamily: 'Poppins-Regular',
     fontWeight: 'bold',
   },
   subtitleNewFeedup: {
     fontSize: 16,
+    fontFamily: 'Poppins-Regular',
     marginBottom: 20,
     paddingTop: 10,
     textAlign: 'justify'

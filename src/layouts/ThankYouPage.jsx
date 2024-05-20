@@ -2,6 +2,8 @@ import React from 'react';
 import { View, Text, Image, TouchableOpacity} from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import styles from '../styles/PagesStyles'
+import { useFonts } from 'expo-font';
+import FONTS from "../styles/fonts/fonts";
 
 export default function ThankYouPage() {
     const navigation = useNavigation();
@@ -9,6 +11,15 @@ export default function ThankYouPage() {
     const backNewFeedup = () => {
         navigation.navigate('Home'); // Navega para a tela de home
     };
+
+    let [fontsLoaded] = useFonts({
+      "Poppins-Regular": require("../assets/fonts/Poppins-Regular.ttf"),
+      "Poppins-Bold": require("../assets/fonts/Poppins-Bold.ttf"),
+    });
+
+    if (!fontsLoaded) {
+      return <AppLoading />;
+    }
 
     return (
         <View style={styles.containerOnboarding}>

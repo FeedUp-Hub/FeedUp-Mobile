@@ -1,11 +1,11 @@
-import react from 'react';
+import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { useEffect, useState } from 'react';
 import { View, Text, Image } from 'react-native'
 import { useNavigation } from '@react-navigation/native';
+import 'react-native-gesture-handler';
 
 import styles from './src/styles/PagesStyles';
-
 import AppNavigation from './src/routes/AppNavigation';
 
 //Configuração da tela de splash
@@ -26,7 +26,7 @@ function App() {
 
   if (isLoading)
     return <SplashScreen />
-  return <AppNavigation initialRoute={'Feed'} />
+  return <AppNavigation initialRoute={'Login'} />
 }
 
 export default App;
