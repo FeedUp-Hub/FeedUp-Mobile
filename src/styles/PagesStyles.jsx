@@ -110,15 +110,14 @@ const styles= StyleSheet.create({
     padding: 16,
   },
   navButtonOnboarding: {
-    fontSize: 24,
-    fontFamily: 'Poppins-Regular',
-    color: '#ffffff',
+    width: 17,
+    height: 17,
+    color: '#000',
   },
   disabledOnboarding: {
     opacity: 0.3,
   },
   logoTitleSubtitleContainerOnboarding: {
-
     flexDirection: 'column',
     alignItems: 'center',
     paddingLeft: 16,
@@ -191,6 +190,18 @@ const styles= StyleSheet.create({
     color: '#ffffff',
     fontSize: 25,
     fontFamily: 'Poppins-Regular',
+  },
+  nozesThanks: {
+    fontSize: 20,
+    fontFamily: 'Poppins-Regular',
+    color: '#4B4B4B',
+    borderRadius: 50,
+    borderColor: '#4B4B4B',
+    borderWidth: 1,
+    padding: 10,
+    width: 180,
+    height: 48,
+    textAlign: 'center',
   },
   containerHome: {
     flex: 1,
@@ -387,7 +398,67 @@ const styles= StyleSheet.create({
   contentThankYou: {
     justifyContent: 'center',
     alignItems: 'center',
-    padding: 50,
+    padding: 28,
+  },
+  thanksFeedUp: {
+    fontSize: 24,
+    fontFamily: 'Poppins-Regular',
+    fontWeight: 'bold',
+    color: '#5271FF',
+  },
+  logoThanksSubtitle: {
+    paddingTop: 10,
+    fontSize: 14,
+    color: '#4B4B4B',
+    fontFamily: 'Poppins-Regular',
+    },
+  logoTitleSubtitleContainerThanks: {
+    paddingTop: 20,
+    flexDirection: 'column',
+    alignItems: 'center',
+    paddingLeft: 16,
+  },
+  imageThanks: {
+    paddingTop: 56,
+    width: 284,
+    height: 207,
+    alignSelf: 'center',
+    },
+  subtitleThanks: {
+    paddingTop: 10,
+    fontSize: 14,
+    color: '#4B4B4B',
+    fontFamily: 'Poppins-Regular',
+  },
+  titleThanks: {
+    paddingTop: 53,
+    fontSize: 24,
+    fontFamily: 'Poppins-Regular',
+    color: '#4B4B4B',
+    fontWeight: 'bold',
+  },
+  logoThanks: {
+    width: 50,
+    height: 50,
+    marginRight: 10,
+  },
+  navButtonThanks: {
+    width: 17,
+    height: 17,
+    color: '#000',
+  },
+  headerThanks: {
+    paddingTop: 54,
+    fontSize: 25,
+    fontFamily: 'Poppins-Regular',
+    color: '#ffffff',
+    flexDirection: 'row',
+    alignItems: 'center',
+    padding: 16,
+  },
+  containerThanks: {
+    flex: 1,
+    backgroundColor: '#ffffff',
   },
 });
 

@@ -1,6 +1,4 @@
-// src/config/helpers/submitForm.jsx
-
-import configApi from '../configApi';
+import configApi from '../services/ConfigAPI';
 
 // Função para enviar o formulário
 export const submitForm = async (formData) => {

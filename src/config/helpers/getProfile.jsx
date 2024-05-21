@@ -1,6 +1,4 @@
-// src/config/helpers/getProfile.jsx
-
-import configApi from '../configApi';
+import configApi from '../services/ConfigAPI';
 
 // Função para obter o perfil do usuário
 export const getProfile = async () => {

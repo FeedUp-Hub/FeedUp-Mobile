@@ -2,10 +2,11 @@ import React, { useState } from "react";
 import { View, Text, TextInput, TouchableOpacity } from "react-native";
 import { Picker } from "@react-native-picker/picker";
 import { useNavigation } from "@react-navigation/native";
-import AppLoading from "expo-app-loading";
-import styles from "../styles/PagesStyles";
 import { useFonts } from "expo-font";
-import FONTS from "../styles/fonts/fonts";
+import * as SplashScreen from 'expo-splash-screen';
+import styles from "../styles/PagesStyles";
+import AsyncStorage from '@react-native-async-storage/async-storage'; //para pegar token de autenticacao, ja salvo
+import ConfigAPI from '../config/services/ConfigAPI'; //para buscar feedbacks via api
 
 export default function NewFeedUp() {
   const navigation = useNavigation();
@@ -16,25 +17,40 @@ export default function NewFeedUp() {
   });
 
   if (!fontsLoaded) {
-    return <AppLoading />;
+    SplashScreen.preventAutoHideAsync();
+    return null;
+  } else {
+    SplashScreen.hideAsync();
   }
 
   const [recipient, setRecipient] = useState("");
   const [message, setMessage] = useState("");
   const [isAnonymous, setIsAnonymous] = useState(false);
   const [value, setValue] = useState("");
+  const [isConstructive, setIsConstructive] = useState(false);
 
   const saveFeedUp = () => {
-    if (!recipient.trim() || !message.trim()) {
+    if (!recipient.trim() || !message.trim() || !value.trim()) {
       alert("Por favor, verifique se você preencheu todos os campos.");
       return;
     }
 
-    console.log("Recipient:", recipient);
-    console.log("Message:", message);
-    console.log("Valor:", value);
-    console.log("Anonymous:", isAnonymous);
+    const newFeedUp = {
+      id: '', // Gerado no backend
+      id_usersend: '', // Preencher com o ID do usuário atual
+      id_userreceived: recipient,
+      username_userreceived: recipient,
+      value: value,
+      message: message,
+      isanonymous: isAnonymous,
+      isconstructive: isConstructive,
+      created_at: new Date().toISOString(),
+      updated_at: new Date().toISOString(),
+    };
 
+    console.log("FeedUp:", newFeedUp);
+
+    // Navegar para a página de agradecimento
     navigation.navigate("Thank You");
   };
 

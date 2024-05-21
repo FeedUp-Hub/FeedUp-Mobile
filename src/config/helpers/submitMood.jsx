@@ -1,6 +1,4 @@
-// src/config/helpers/submitMood.jsx
-
-import configApi from '../configApi';
+import configApi from '../services/ConfigAPI';
 
 // Função para enviar o mood do usuário
 export const submitMood = async (moodData) => {

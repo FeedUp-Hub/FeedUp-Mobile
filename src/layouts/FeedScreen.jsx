@@ -1,60 +1,114 @@
-import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, FlatList, Image, TouchableOpacity, TextInput } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { FlatList, Image, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import { formatDistanceToNow } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
+import { useFonts } from "expo-font";
+import FONTS from "../styles/fonts/fonts";
 
-const initialPosts = [
-  {
-    id: '1',
-    content: 'Este é o primeiro post.',
-    likes: 0,
-    comments: [],
-    userImage: require('../assets/image.png'),
-    userName: 'Usuário 1',
-    timestamp: new Date().toISOString()
-  },
-  {
-    id: '2',
-    content: 'Este é o segundo post.',
-    likes: 0,
-    comments: [],
-    userImage: require('../assets/image.png'),
-    userName: 'Usuário 2',
-    timestamp: new Date().toISOString()
-  },
-  {
-    id: '3',
-    content: 'Este é o terceiro post.',
-    likes: 0,
-    comments: [],
-    userImage: require('../assets/image.png'),
-    userName: 'Usuário 3',
-    timestamp: new Date().toISOString()
-  }
-];
-
-const topUsers = [
-  { id: '1', name: 'Usuário A', feedbackCount: 25 },
-  { id: '2', name: 'Usuário B', feedbackCount: 20 },
-  { id: '3', name: 'Usuário C', feedbackCount: 15 }
-];
-
-const onlineUser = { id: '4', name: 'Usuário Online', feedbackCount: 10 };
+import AsyncStorage from '@react-native-async-storage/async-storage'; //para pegar token de autenticacao, ja salvo
+import ConfigAPI from '../config/services/ConfigAPI'; //para buscar feedbacks via api
 
 export default function FeedScreen() {
-  const [posts, setPosts] = useState(initialPosts);
-  const [newComments, setNewComments] = useState({});
-  const [expandedComments, setExpandedComments] = useState({});
+
+    let [fontsLoaded] = useFonts({
+      "Poppins-Regular": require("../assets/fonts/Poppins-Regular.ttf"),
+      "Poppins-Bold": require("../assets/fonts/Poppins-Bold.ttf"),
+    });
+
+    if (!fontsLoaded) {
+      return <AppLoading />;
+    }
+
+  const [posts, setPosts] = useState([]);
+  const [userInfos, setUserInfo] = useState([]);
   const [likedPosts, setLikedPosts] = useState({});
-  const [likedComments, setLikedComments] = useState({});
+  const [expandedComments, setExpandedComments] = useState({});
+  const [newComments, setNewComments] = useState({});
+  const [comments, setComments] = useState({});
+  const [loggedUserEmail, setLoggedUserEmail] = useState('');
+
+
+  <Image source={require('../assets/images/icons/heart.png')} />
 
   useEffect(() => {
-    const interval = setInterval(() => {
-      setPosts([...posts]);
-    }, 10000);
-    return () => clearInterval(interval);
-  }, [posts]);
+    const fetchPosts = async () => {
+      try {
+        //pega token pra autenticar
+        const token = await AsyncStorage.getItem('token');
+        const loggedUser = await AsyncStorage.getItem('loggedUser'); //pra pegar o usuario logado, sera usado no momento de adicionar comentario
+        setLoggedUserEmail(loggedUser);
 
+        //chamada da api pra pegar feedups salvos
+        const response = await ConfigAPI.get('/home', {
+          headers: {
+            Authorization: `Bearer ${token}` //parametro passando token pra autenticacao
+          }
+        });
+
+        //console.log('pegou feedbacks', response.data.feedupFound); //para manutencao
+
+        //pega os feedbacks e usuarios via API
+        setPosts(response.data.feedupFound);
+        setUserInfo(response.data.users);
+
+      } catch (error) {
+        console.error('Erro na busca pelos feedbacks', error);
+      }
+    };
+
+    fetchPosts(); // Chame a função para buscar os posts quando o componente for montado
+  }, []); // Passando um array vazio como segundo argumento, garantimos que a chamada à API só será feita uma vez
+
+//busca informações do usuário pelo ID
+const getUserInfo = async (userId) => {
+  try {
+    const user = userInfos.find(user => user.id === userId);
+    return user ? user.username : 'Usuário Desconhecido';
+  } catch (error) {
+    console.error('Erro ao buscar informações do usuário:', error);
+    return 'Usuário Desconhecido'; // Retorna 'Usuário Desconhecido' em caso de erro
+  }
+};
+
+//busca os comentários de um feedback específico
+const fetchComments = async (postId) => {
+  //console.log('check de parametro', postId);
+  try {
+    const token = await AsyncStorage.getItem('token');
+
+    // Faz a chamada à API para buscar os comentários do feedback com o ID postId
+    const response = await ConfigAPI.get(`/comments/${postId}`, {
+      headers: {
+        Authorization: `Bearer ${token}` //parametro passando token pra autenticacao
+      },
+    });
+
+    // Verifica se a requisicao veio vazia (nao ha comentarios para aquele feedback)
+    if (!response.data || response.data.length === 0) {
+      //console.log('Nenhum comentário encontrado.');
+      return []; //Retorna uma lista vazia se não houver comentários
+    }
+
+    //Extrai as informações relevantes dos comentários
+   const comments = await Promise.all(response.data.map(async (comment) => {
+      const userName = await getUserInfo(comment.id_usercommented);
+      return {
+        message: comment.message,
+        created_at: comment.created_at,
+        username: userName,
+      };
+    }));
+
+    //Retorna os comentários
+    return comments;
+
+  } catch (error) {
+    //console.error('Erro ao buscar comentários:', error);
+    return []; //Retorna uma lista vazia em caso de erro
+  }
+};
+
+  // Função para curtir um post
   const handleLike = (postId) => {
     const updatedPosts = [...posts];
     const index = updatedPosts.findIndex(post => post.id === postId);
@@ -62,83 +116,95 @@ export default function FeedScreen() {
       if (likedPosts[postId]) {
         updatedPosts[index] = { ...updatedPosts[index], likes: updatedPosts[index].likes - 1 };
         const updatedLikedPosts = { ...likedPosts };
-        delete updatedLikedPosts[postId];
+        updatedLikedPosts[postId] = false; // Altera para não curtido
         setLikedPosts(updatedLikedPosts);
       } else {
         updatedPosts[index] = { ...updatedPosts[index], likes: updatedPosts[index].likes + 1 };
-        setLikedPosts({ ...likedPosts, [postId]: true });
+        const updatedLikedPosts = { ...likedPosts };
+        updatedLikedPosts[postId] = true; // Altera para curtido
+        setLikedPosts(updatedLikedPosts);
       }
       setPosts(updatedPosts);
     }
-  };
+};
 
-  const handleComment = (postId) => {
-    const updatedPosts = [...posts];
-    const index = updatedPosts.findIndex(post => post.id === postId);
-    if (index !== -1) {
-      const commentText = newComments[postId];
-      if (commentText.trim().length > 0) {
-        updatedPosts[index] = {
-          ...updatedPosts[index],
-          comments: [
-            ...updatedPosts[index].comments,
-            {
-              text: commentText,
-              user: 'Nome do Usuário',
-              timestamp: new Date().toISOString()
-            }
-          ]
-        };
-        setPosts(updatedPosts);
-        setNewComments({ ...newComments, [postId]: '' });
-      }
+
+  // Função para adicionar um comentário a um post
+  const handleComment = async (postId) => {
+    const commentText = newComments[postId];
+
+    if (!commentText.trim()) {
+      return; //não adiciona comentários vazios
     }
-  };
 
+    try {
+      const token = await AsyncStorage.getItem('token');
+
+      const response = await ConfigAPI.post(`/comments/${postId}`,
+        { message: commentText },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      if (response.status === 201) {
+        //201 = comentário adicionado com sucesso
+        const newComment = {
+          message: commentText,
+          created_at: new Date().toISOString(),
+          username: loggedUserEmail,
+        };
+
+        setComments((prevComments) => ({...prevComments,[postId]: [...(prevComments[postId] || []), newComment],}));
+
+        // limpa o campo de comentário após adicionar
+        setNewComments((prevComments) => ({ ...prevComments, [postId]: '',}));
+      }
+    } catch (error) {
+      console.error('Erro ao adicionar comentário:', error);
+    }
+};
+
+  // Função para atualizar o texto do comentário
   const handleCommentChange = (postId, text) => {
     setNewComments({ ...newComments, [postId]: text });
   };
 
-  const toggleComments = (postId) => {
+   // Função para expandir ou recolher os comentários de um post
+  const toggleComments = async (postId) => {
     setExpandedComments((prev) => ({ ...prev, [postId]: !prev[postId] }));
-  };
 
-  const handleLikeComment = (postId, commentIndex) => {
-    const updatedPosts = [...posts];
-    const postIndex = updatedPosts.findIndex(post => post.id === postId);
-    if (postIndex !== -1) {
-      const updatedComments = [...updatedPosts[postIndex].comments];
-      if (likedComments[postId] && likedComments[postId][commentIndex]) {
-        updatedComments[commentIndex] = { ...updatedComments[commentIndex], likes: updatedComments[commentIndex].likes - 1 };
-        const updatedLikedComments = { ...likedComments };
-        updatedLikedComments[postId][commentIndex] = false;
-        setLikedComments(updatedLikedComments);
-      } else {
-        updatedComments[commentIndex] = { ...updatedComments[commentIndex], likes: updatedComments[commentIndex].likes + 1 };
-        const updatedLikedComments = { ...likedComments };
-        if (!updatedLikedComments[postId]) updatedLikedComments[postId] = {};
-        updatedLikedComments[postId][commentIndex] = true;
-        setLikedComments(updatedLikedComments);
+    if (!expandedComments[postId]) {
+      // Se os comentários estão sendo expandidos, buscar os comentários desse post
+      try {
+        const comments = await fetchComments(postId);
+        setComments((prevComments) => ({...prevComments,[postId]: comments,}));
+      } catch (error) {
+        console.error('Erro ao buscar comentários:', error);
       }
-      updatedPosts[postIndex] = { ...updatedPosts[postIndex], comments: updatedComments };
-      setPosts(updatedPosts);
     }
   };
 
+  // Função para renderizar um post
   const renderPost = ({ item }) => (
-    <View style={styles.post}>
+    //parte para trazer feedbacks
+    <View style={styles.postContainer}>
       <View style={styles.postHeader}>
-        <Image source={item.userImage} style={styles.userImage} />
-        <View style={styles.postDetails}>
-          <Text style={styles.postTimestamp}>{formatDistanceToNow(new Date(item.timestamp), { addSuffix: true, locale: ptBR })}</Text>
-          <Text style={styles.userName}>{item.userName}</Text>
-          <Text style={styles.postContent}>{item.content}</Text>
+        <Image source={require('../assets/images/icons/icon-user.png')} style={styles.postUserImage} />
+        <View>
+          <Text style={styles.postUserName}>{item.sender_username}</Text>
+          <Text style={styles.postTimestamp}>{formatDistanceToNow(new Date(item.created_at), { addSuffix: true, locale: ptBR })}</Text>
         </View>
       </View>
+      <Text style={styles.postContent}>@{item.receiver_username}:{'\n'} {item.message}</Text>
+
+      {/*parte para botoes de curtir e comentar*/}
       <View style={styles.actions}>
         <TouchableOpacity onPress={() => handleLike(item.id)} style={styles.likeButton}>
           <Image source={require('../assets/images/icons/heart.png')} style={[styles.heartIcon, likedPosts[item.id] && styles.likedHeartIcon]} />
-          <Text style={styles.likeCount}>{item.likes}</Text>
+          {/*<Text style={styles.likeCount}>{item.likes}</Text> ainda nao tem likes na api */}
           <Text style={styles.likeText}>{likedPosts[item.id] ? 'Curtiu' : 'Curtir'}</Text>
         </TouchableOpacity>
         <TouchableOpacity onPress={() => toggleComments(item.id)} style={styles.commentButton}>
@@ -146,21 +212,30 @@ export default function FeedScreen() {
           <Text>Ver comentários</Text>
         </TouchableOpacity>
       </View>
-      {expandedComments[item.id] && (
-        <View style={styles.comments}>
-          {item.comments.map((comment, index) => (
+
+      {/*expandir comentarios*/}
+      {expandedComments[item.id] && comments[item.id] && (
+        <View style={styles.commentsContainer}>
+
+          {/*percorre comentarios do feedback*/}
+          {comments[item.id].map((comment, index) => (
             <View key={index} style={styles.comment}>
-              <Text style={styles.commentUser}>{comment.user}: </Text>
-              <Text>{comment.text}</Text>
-              <Text style={styles.commentTimestamp}>{formatDistanceToNow(new Date(comment.timestamp), { addSuffix: true, locale: ptBR })}</Text>
-              <TouchableOpacity onPress={() => handleLikeComment(item.id, index)} style={styles.likeButton}>
-                <Image source={require('../assets/images/icons/heart.png')} style={[styles.heartIcon, likedComments[item.id]?.[index] && styles.likedHeartIcon]} />
-                <Text style={styles.likeCount}>{comment.likes}</Text>
-              </TouchableOpacity>
+
+              {/*pega usuario que enviou comentario*/}
+              <Text style={styles.commentUser}>{comment.username}: </Text>
+
+              {/*pega mensagem do comentario*/}
+              <Text>{comment.message.replace(/[{}]/g, '')}</Text>
+
+              {/*pega data do comentario*/}
+              <Text style={styles.commentTimestamp}>{formatDistanceToNow(new Date(comment.created_at), { addSuffix: true, locale: ptBR })}</Text>
+
             </View>
           ))}
         </View>
       )}
+
+      {/*novo comentario*/}
       <View style={styles.commentSection}>
         <TextInput
           style={styles.input}
@@ -175,111 +250,181 @@ export default function FeedScreen() {
     </View>
   );
 
+  // Renderiza a tela
   return (
-    <View style={styles.container}>
-      {/* Container com informações */}
-      <View style={styles.infoContainer}>
-        {/* Top 3 mais envios de feedback */}
-        {topUsers.map((user, index) => (
-          <View key={user.id} style={styles.infoRow}>
-            <Text style={styles.infoData}>{index + 1}</Text>
-            <Text style={styles.infoData}>{user.name}</Text>
-            <Text style={styles.infoData}>{user.feedbackCount}</Text>
-          </View>
-        ))}
-        {/* Informações do usuário online */}
-        <View style={styles.infoUser}>
-          <Text style={styles.infoData}>Você</Text>
-          <Text style={styles.infoData}>{onlineUser.name}</Text>
-          <Text style={styles.infoData}>{onlineUser.feedbackCount}</Text>
-        </View>
-      </View>
-
-      {/* FlatList dos posts */}
+  <View style={styles.container}>
       <FlatList
-        data={posts}
+        data={posts.sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime())}
         renderItem={renderPost}
         keyExtractor={(item) => item.id}
         contentContainerStyle={styles.postsContainer}
       />
     </View>
+
   );
-};
+}
 
 const styles = StyleSheet.create({
   container: {
+    paddingTop: 50,
     flex: 1,
+    backgroundColor: '#F9F9F9', // Cor de fundo clara
+    padding: 15, // Padding geral ao redor
   },
-  infoContainer: {
-    width: 327,
-    height: 187,
-    marginBottom: 20,
-    padding: 10,
-    backgroundColor: '#f8f8f8',
-    borderRadius: 10,
-    shadowColor: '#000',
-    shadowOpacity: 0.1,
-    shadowRadius: 5,
-    elevation: 3,
+  rankingContainer: {
+    borderWidth: 1,
+    borderRadius: 8,
+    borderColor: '#E0E0E0',
+    backgroundColor: '#FFF',
+    padding: 16,
+    marginBottom: 16,
   },
-  infoRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    paddingVertical: 5,
-  },
-  infoUser: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    paddingVertical: 5,
-    borderTopWidth: 1,
-    borderTopColor: '#ccc',
-    marginTop: 10,
-  },
-  infoData: {
-    fontSize: 16,
-  },
-  postsContainer: {
-    paddingHorizontal: 10,
-  },
-  post: {
-    backgroundColor: '#fff',
-    borderRadius: 13,
-    padding: 24,
-    marginBottom: 10,
-    shadowColor: '#000',
-    shadowOpacity: 0.1,
-    shadowRadius: 5,
-    elevation: 3,
-  },
-  postHeader: {
+  userRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: 10,
+    justifyContent: 'space-between',
+    paddingVertical: 8,
+    borderBottomWidth: 1,
+    borderBottomColor: '#E0E0E0',
+  },
+  loggedInUserRow: {
+    backgroundColor: '#5271FF',
+    borderBottomWidth: 0,
+  },
+  rank: {
+    fontSize: 16,
+    fontFamily: 'Poppins-Regular',
+    fontWeight: 'bold',
+    width: 24,
+    textAlign: 'center',
   },
   userImage: {
     width: 40,
     height: 40,
     borderRadius: 20,
-    marginRight: 10,
-  },
-  postDetails: {
-    flex: 1,
+    marginHorizontal: 8,
   },
   userName: {
+    flex: 1,
+    fontSize: 16,
+    fontFamily: 'Poppins-Regular'
+  },
+  userScore: {
+    fontSize: 16,
     fontWeight: 'bold',
-    fontSize: 16,
+    fontFamily: 'Poppins-Regular'
   },
-  postContent: {
-    fontSize: 16,
-    marginBottom: 5,
+  postContainer: {
+    backgroundColor: '#FFF',
+    borderRadius: 8,
+    padding: 16,
+    marginTop: 16,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 2, // Sombra em Android
   },
-  postTimestamp: {
-    fontSize: 11,
-    color: '#828282',
-  },
-  actions: {
+  postHeader: {
     flexDirection: 'row',
     alignItems: 'center',
+    marginBottom: 8,
+  },
+  postUserImage: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    marginRight: 8,
+  },
+  postUserName: {
+    fontSize: 16,
+    fontFamily: 'Poppins-Regular',
+    fontWeight: 'bold',
+  },
+  postTimestamp: {
+    fontSize: 12,
+    fontFamily: 'Poppins-Regular',
+    color: '#828282',
+  },
+  postContent: {
+    fontSize: 14,
+    fontFamily: 'Poppins-Regular',
+    marginTop: 8,
+    marginBottom: 16,
+  },
+  postActions: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+  actionButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  actionIcon: {
+    width: 20,
+    height: 20,
+    marginRight: 4,
+  },
+  likedHeartIcon: {
+    tintColor: 'red',
+  },
+  actionText: {
+    fontSize: 14,
+    fontFamily: 'Poppins-Regular',
+    color: '#5271FF',
+  },
+  commentsContainer: {
+    marginTop: 8,
+  },
+  comment: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginTop: 8,
+  },
+  commentUser: {
+    fontWeight: 'bold',
+    fontFamily: 'Poppins-Regular',
+    marginRight: 4,
+  },
+  commentTimestamp: {
+    fontSize: 12,
+    fontFamily: 'Poppins-Regular',
+    color: '#828282',
+    marginLeft: 8,
+  },
+  addCommentContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginTop: 16,
+  },
+  chatIcon: {
+    width: 18,
+    height: 18,
+    marginRight: 8
+  },
+  addCommentInput: {
+    flex: 1,
+    borderColor: '#E0E0E0',
+    borderWidth: 1,
+    borderRadius: 8,
+    paddingHorizontal: 12,
+    paddingVertical: 8,
+  },
+  addCommentButton: {
+    marginLeft: 8,
+    padding: 8,
+    backgroundColor: '#5271FF',
+    borderRadius: 8,
+  },
+  addCommentButtonText: {
+    color: '#FFF',
+  },
+  likeCount: {
+    fontSize: 16,
+    paddingLeft: 5,
+  },
+  likeText: {
+    marginLeft: 5,
   },
   likeButton: {
     width: 100,
@@ -295,26 +440,11 @@ const styles = StyleSheet.create({
     color: '#000000',
     borderRadius: 15,
   },
-  likeText: {
-    marginLeft: 5,
-  },
   heartIcon: {
     width: 20,
     height: 20,
     marginRight: 5,
     tintColor: 'grey', // Default color
-  },
-  likedHeartIcon: {
-    tintColor: 'red', // Liked color
-  },
-  chatIcon: {
-    width: 20,
-    height: 20,
-    marginRight: 5,
-  },
-  likeCount: {
-    fontSize: 16,
-    paddingLeft: 5,
   },
   commentButton: {
     width: 150,
@@ -329,6 +459,15 @@ const styles = StyleSheet.create({
     opacity: 0.4,
     color: '#000000',
     borderRadius: 15,
+  },
+  actions: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+commentSection: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginTop: 10,
   },
   commentPost: {
     width: 90,
@@ -345,32 +484,6 @@ const styles = StyleSheet.create({
     paddingTop: 5,
     paddingLeft: 12,
   },
-  commentButtonText: {
-    marginRight: 150,
-    padding: 5,
-  },
-  comments: {
-    marginTop: 10,
-  },
-  comment: {
-    flexDirection: 'row',
-    marginBottom: 5,
-    alignItems: 'center',
-  },
-  commentUser: {
-    fontWeight: 'bold',
-    marginRight: 5,
-  },
-  commentTimestamp: {
-    fontSize: 12,
-    color: '#888',
-    marginLeft: 5,
-  },
-  commentSection: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginTop: 10,
-  },
   input: {
     flex: 1,
     borderColor: '#ccc',
@@ -378,5 +491,8 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     paddingHorizontal: 10,
     marginRight: 10,
+  },
+   comments: {
+    marginTop: 10,
   },
 });

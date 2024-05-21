@@ -1,5 +1,3 @@
-// src/config/hooks/useApi.js
-
 import { useState, useEffect } from 'react';
 import { getFeed } from '../helpers/getFeed';
 import { getProfile } from '../helpers/getProfile';
