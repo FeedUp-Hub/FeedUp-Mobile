@@ -17,16 +17,17 @@ const SplashScreen = () => {
 }
 function App() {
 
-  const [isLoading, setIsLoading] = useState(true)
+  const [isLoading, setIsLoading] = useState(true) // Estado para verificar se a tela de splash está ativa
 
   // Timer para tela de splash durar alguns segundos ao iniciar
   useEffect(() => {const timeout = setTimeout(() => {setIsLoading(false)}, 2000)
     return () => { clearTimeout(timeout) }
   }, [])
 
+  // Verifica se a tela de splash está ativa
   if (isLoading)
     return <SplashScreen />
-  return <AppNavigation initialRoute={'Feed'} />
+  return <AppNavigation initialRoute={'Home'} />
 }
 
 export default App;
