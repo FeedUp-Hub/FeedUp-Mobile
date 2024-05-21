@@ -26,7 +26,7 @@ function App() {
 
   if (isLoading)
     return <SplashScreen />
-  return <AppNavigation initialRoute={'Login'} />
+  return <AppNavigation initialRoute={'Feed'} />
 }
 
 export default App;

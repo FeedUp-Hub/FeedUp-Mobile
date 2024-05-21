@@ -6,7 +6,6 @@
     "orientation": "portrait",
     "userInterfaceStyle": "light",
     "splash": {
-      
       "backgroundColor": "#ffffff"
     },
     "ios": {
@@ -14,14 +13,14 @@
     },
     "android": {
       "adaptiveIcon": {
-
         "backgroundColor": "#ffffff"
       }
     },
     "web": {
       "favicon": "./assets/favicon.png"
-    }
-
-}
-
+    },
+    "plugins": [
+      "expo-secure-store"
+    ]
+  }
 }
