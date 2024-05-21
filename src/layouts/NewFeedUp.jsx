@@ -4,7 +4,7 @@ import { Picker } from "@react-native-picker/picker";
 import { useNavigation } from "@react-navigation/native";
 import { useFonts } from "expo-font";
 import * as SplashScreen from 'expo-splash-screen';
-import styles from "../styles/PagesStyles";
+import styles from "../styles/PagesStyles"; //importa estilos
 import AsyncStorage from '@react-native-async-storage/async-storage'; //para pegar token de autenticacao, ja salvo
 import ConfigAPI from '../config/services/ConfigAPI'; //para buscar feedbacks via api
 
@@ -38,14 +38,14 @@ export default function NewFeedUp() {
     const newFeedUp = {
       id: '', // Gerado no backend
       id_usersend: '', // Preencher com o ID do usuário atual
-      id_userreceived: recipient,
-      username_userreceived: recipient,
-      value: value,
-      message: message,
-      isanonymous: isAnonymous,
-      isconstructive: isConstructive,
-      created_at: new Date().toISOString(),
-      updated_at: new Date().toISOString(),
+      id_userreceived: recipient, // Preencher com o ID do usuário que receberá o feedback
+      username_userreceived: recipient, // Preencher com o nome do usuário que receberá o feedback
+      value: value, // Valor do feedback
+      message: message, // Mensagem do feedback
+      isanonymous: isAnonymous, // Se o feedback é anônimo
+      isconstructive: isConstructive, // Se o feedback é construtivo
+      created_at: new Date().toISOString(), // Data de criação do feedback
+      updated_at: new Date().toISOString(), // Data de atualização do feedback
     };
 
     console.log("FeedUp:", newFeedUp);
@@ -67,11 +67,11 @@ export default function NewFeedUp() {
 
       <TextInput
         style={styles.inputNewFeedup}
-        placeholder="Menção"
+        placeholder="Procure pelo colaborador"
         value={recipient}
         onChangeText={setRecipient}
       />
-
+      {/* Picker para escolher se o feedback é construtivo */}
       <View style={styles.pickerGeralNewFeedup}>
         <Picker
           selectedValue={value}
@@ -190,14 +190,14 @@ export default function NewFeedUp() {
         value={message}
         onChangeText={setMessage}
       />
-
+      {Picker para escolher se o feedback é construtivo}
       <View style={styles.pickerGeralNewFeedup}>
         <Picker
           selectedValue={isAnonymous}
           onValueChange={(itemValue) => setIsAnonymous(itemValue)}
           style={styles.pickerNewFeedup}
         >
-          <Picker.Item label="Não (default)" value={false} />
+          <Picker.Item label="Não" value={false} />
           <Picker.Item label="Sim" value={true} />
         </Picker>
       </View>

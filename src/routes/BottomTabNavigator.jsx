@@ -16,9 +16,10 @@ import feedbackIcon from '../assets/images/menu/feedbackIcon.png';
 import homeIcon from '../assets/images/menu/homeIcon.png';
 import profileIcon from '../assets/images/menu/profileIcon.png';
 
-const Tab = createBottomTabNavigator();
-const Stack = createStackNavigator();
+const Tab = createBottomTabNavigator(); // Criação do menu inferior
+const Stack = createStackNavigator(); // Criação do menu superior
 
+// Definição das telas que serão exibidas no menu superior
 const HomeStack = () => (
   <Stack.Navigator screenOptions={{ headerShown: false }}>
     <Stack.Screen name="Feed" component={FeedScreen} />
@@ -27,7 +28,7 @@ const HomeStack = () => (
     <Stack.Screen name="NozesTrading" component={NozesTrading} />
   </Stack.Navigator>
 );
-
+// Definição das telas que serão exibidas no menu inferior
 export default function BottomTabNavigator() {
   return (
     <Tab.Navigator initialRouteName="Home" screenOptions={{ headerShown: false }}>

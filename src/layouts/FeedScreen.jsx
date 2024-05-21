@@ -3,239 +3,192 @@ import { FlatList, Image, StyleSheet, Text, TextInput, TouchableOpacity, View } 
 import { formatDistanceToNow } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import { useFonts } from "expo-font";
-import FONTS from "../styles/fonts/fonts";
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import ConfigAPI from '../config/services/ConfigAPI';
 
-import AsyncStorage from '@react-native-async-storage/async-storage'; //para pegar token de autenticacao, ja salvo
-import ConfigAPI from '../config/services/ConfigAPI'; //para buscar feedbacks via api
-
+//Função que retorna o Feed de posts e ranking
 export default function FeedScreen() {
 
-    let [fontsLoaded] = useFonts({
-      "Poppins-Regular": require("../assets/fonts/Poppins-Regular.ttf"),
-      "Poppins-Bold": require("../assets/fonts/Poppins-Bold.ttf"),
-    });
+  let [fontsLoaded] = useFonts({
+    "Poppins-Regular": require("../assets/fonts/Poppins-Regular.ttf"),
+    "Poppins-Bold": require("../assets/fonts/Poppins-Bold.ttf"),
+  });
 
-    if (!fontsLoaded) {
-      return <AppLoading />;
-    }
+  if (!fontsLoaded) {
+    return null; // Você pode substituir por um componente de carregamento
+  }
 
-  const [posts, setPosts] = useState([]);
-  const [userInfos, setUserInfo] = useState([]);
-  const [likedPosts, setLikedPosts] = useState({});
-  const [expandedComments, setExpandedComments] = useState({});
-  const [newComments, setNewComments] = useState({});
-  const [comments, setComments] = useState({});
-  const [loggedUserEmail, setLoggedUserEmail] = useState('');
+  const [posts, setPosts] = useState([]); // Posts
+  const [userInfos, setUserInfos] = useState([]); // Informações dos usuários
+  const [likedPosts, setLikedPosts] = useState({}); // Posts curtidos pelo usuário
+  const [expandedComments, setExpandedComments] = useState({}); // Comentários expandidos de cada post
+  const [newComments, setNewComments] = useState({}); // Novos comentários de cada post
+  const [comments, setComments] = useState({}); // Comentários de cada post
+  const [loggedUserEmail, setLoggedUserEmail] = useState(''); // Email do usuário logado
 
-
-  <Image source={require('../assets/images/icons/heart.png')} />
-
+  // Função para buscar os posts e usuários
   useEffect(() => {
     const fetchPosts = async () => {
       try {
-        //pega token pra autenticar
         const token = await AsyncStorage.getItem('token');
-        const loggedUser = await AsyncStorage.getItem('loggedUser'); //pra pegar o usuario logado, sera usado no momento de adicionar comentario
+        const loggedUser = await AsyncStorage.getItem('loggedUser');
         setLoggedUserEmail(loggedUser);
-
-        //chamada da api pra pegar feedups salvos
+        // Busca de posts
         const response = await ConfigAPI.get('/home', {
           headers: {
-            Authorization: `Bearer ${token}` //parametro passando token pra autenticacao
+            Authorization: `Bearer ${token}`
           }
         });
-
-        //console.log('pegou feedbacks', response.data.feedupFound); //para manutencao
-
-        //pega os feedbacks e usuarios via API
+        // Atualiza os estados de posts e usuários
         setPosts(response.data.feedupFound);
-        setUserInfo(response.data.users);
+        setUserInfos(response.data.users);
 
       } catch (error) {
         console.error('Erro na busca pelos feedbacks', error);
       }
     };
+    // Busca os posts ao carregar a tela - Está vazia para não ficar chamando toda hora
+    fetchPosts();
+  }, []);
 
-    fetchPosts(); // Chame a função para buscar os posts quando o componente for montado
-  }, []); // Passando um array vazio como segundo argumento, garantimos que a chamada à API só será feita uma vez
-
-//busca informações do usuário pelo ID
-const getUserInfo = async (userId) => {
-  try {
-    const user = userInfos.find(user => user.id === userId);
-    return user ? user.username : 'Usuário Desconhecido';
-  } catch (error) {
-    console.error('Erro ao buscar informações do usuário:', error);
-    return 'Usuário Desconhecido'; // Retorna 'Usuário Desconhecido' em caso de erro
-  }
-};
-
-//busca os comentários de um feedback específico
-const fetchComments = async (postId) => {
-  //console.log('check de parametro', postId);
-  try {
-    const token = await AsyncStorage.getItem('token');
-
-    // Faz a chamada à API para buscar os comentários do feedback com o ID postId
-    const response = await ConfigAPI.get(`/comments/${postId}`, {
-      headers: {
-        Authorization: `Bearer ${token}` //parametro passando token pra autenticacao
-      },
-    });
-
-    // Verifica se a requisicao veio vazia (nao ha comentarios para aquele feedback)
-    if (!response.data || response.data.length === 0) {
-      //console.log('Nenhum comentário encontrado.');
-      return []; //Retorna uma lista vazia se não houver comentários
+  // Função para buscar informações de um usuário
+  const getUserInfo = async (userId) => {
+    try {
+      const user = userInfos.find(user => user.id === userId);
+      return user ? user.username : 'Usuário Desconhecido';
+    } catch (error) {
+      console.error('Erro ao buscar informações do usuário:', error);
+      return 'Usuário Desconhecido';
     }
+  };
 
-    //Extrai as informações relevantes dos comentários
-   const comments = await Promise.all(response.data.map(async (comment) => {
-      const userName = await getUserInfo(comment.id_usercommented);
-      return {
-        message: comment.message,
-        created_at: comment.created_at,
-        username: userName,
-      };
-    }));
+  // Função para buscar os comentários de um post
+  const fetchComments = async (postId) => {
+    try {
+      const token = await AsyncStorage.getItem('token');
+      const response = await ConfigAPI.get(`/comments/${postId}`, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        },
+      });
+      // Se não houver comentários, retorna um array vazio ao clicar em "Ver comentários"
+      if (!response.data || response.data.length === 0) {
+        return [];
+      }
+      // Mapeia os comentários para buscar o nome do usuário que comentou
+      const comments = await Promise.all(response.data.map(async (comment) => {
+        const userName = await getUserInfo(comment.id_usercommented);
+        return {
+          message: comment.message,
+          created_at: comment.created_at,
+          username: userName,
+        };
+      }));
 
-    //Retorna os comentários
-    return comments;
+      return comments;
 
-  } catch (error) {
-    //console.error('Erro ao buscar comentários:', error);
-    return []; //Retorna uma lista vazia em caso de erro
-  }
-};
-
+    } catch (error) {
+      return [];
+    }
+  };
   // Função para curtir um post
   const handleLike = (postId) => {
     const updatedPosts = [...posts];
     const index = updatedPosts.findIndex(post => post.id === postId);
-    if (index !== -1) {
+    if (index !== -1) { // Se o post foi encontrado, atualiza o número de curtidas
       if (likedPosts[postId]) {
         updatedPosts[index] = { ...updatedPosts[index], likes: updatedPosts[index].likes - 1 };
         const updatedLikedPosts = { ...likedPosts };
-        updatedLikedPosts[postId] = false; // Altera para não curtido
+        updatedLikedPosts[postId] = false;
         setLikedPosts(updatedLikedPosts);
-      } else {
+      } else { // Se o post não foi curtido, incrementa o número de curtidas
         updatedPosts[index] = { ...updatedPosts[index], likes: updatedPosts[index].likes + 1 };
         const updatedLikedPosts = { ...likedPosts };
-        updatedLikedPosts[postId] = true; // Altera para curtido
+        updatedLikedPosts[postId] = true;
         setLikedPosts(updatedLikedPosts);
       }
       setPosts(updatedPosts);
     }
-};
-
-
-  // Função para adicionar um comentário a um post
+  };
+  // Função para adicionar um comentário
   const handleComment = async (postId) => {
     const commentText = newComments[postId];
 
     if (!commentText.trim()) {
-      return; //não adiciona comentários vazios
+      return;
     }
-
     try {
       const token = await AsyncStorage.getItem('token');
-
-      const response = await ConfigAPI.post(`/comments/${postId}`,
-        { message: commentText },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-
+      const response = await ConfigAPI.post(`/comments/${postId}`, { message: commentText }, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+       // Se o comentário foi adicionado com sucesso, atualiza a lista de comentários
       if (response.status === 201) {
-        //201 = comentário adicionado com sucesso
         const newComment = {
           message: commentText,
           created_at: new Date().toISOString(),
           username: loggedUserEmail,
         };
-
-        setComments((prevComments) => ({...prevComments,[postId]: [...(prevComments[postId] || []), newComment],}));
-
-        // limpa o campo de comentário após adicionar
-        setNewComments((prevComments) => ({ ...prevComments, [postId]: '',}));
+        // Adiciona o novo comentário à lista de comentários
+        setComments((prevComments) => ({ ...prevComments, [postId]: [...(prevComments[postId] || []), newComment] }));
+        setNewComments((prevComments) => ({ ...prevComments, [postId]: '' }));
       }
-    } catch (error) {
+    } catch (error) { // Em caso de erro, exibe uma mensagem no console
       console.error('Erro ao adicionar comentário:', error);
     }
-};
-
-  // Função para atualizar o texto do comentário
+  };
+  // Função para lidar com a mudança de texto em um comentário
   const handleCommentChange = (postId, text) => {
     setNewComments({ ...newComments, [postId]: text });
   };
-
-   // Função para expandir ou recolher os comentários de um post
+  // Função para expandir ou recolher os comentários de um post
   const toggleComments = async (postId) => {
     setExpandedComments((prev) => ({ ...prev, [postId]: !prev[postId] }));
-
+    // Se os comentários ainda não foram carregados, busca-os
     if (!expandedComments[postId]) {
-      // Se os comentários estão sendo expandidos, buscar os comentários desse post
-      try {
+      try { // Busca os comentários do post
         const comments = await fetchComments(postId);
-        setComments((prevComments) => ({...prevComments,[postId]: comments,}));
-      } catch (error) {
+        setComments((prevComments) => ({ ...prevComments, [postId]: comments }));
+      } catch (error) { // Em caso de erro, exibe uma mensagem no console
         console.error('Erro ao buscar comentários:', error);
       }
     }
   };
-
   // Função para renderizar um post
   const renderPost = ({ item }) => (
-    //parte para trazer feedbacks
     <View style={styles.postContainer}>
       <View style={styles.postHeader}>
         <Image source={require('../assets/images/icons/icon-user.png')} style={styles.postUserImage} />
         <View>
-          <Text style={styles.postUserName}>{item.sender_username}</Text>
-          <Text style={styles.postTimestamp}>{formatDistanceToNow(new Date(item.created_at), { addSuffix: true, locale: ptBR })}</Text>
+          <Text style={styles.postUserName}>{item.sender_username}</Text> {/* Nome do usuário que enviou o feedback */}
+          <Text style={styles.postTimestamp}>{formatDistanceToNow(new Date(item.created_at), { addSuffix: true, locale: ptBR })}</Text> {/* Data de envio do feedback */}
         </View>
       </View>
-      <Text style={styles.postContent}>@{item.receiver_username}:{'\n'} {item.message}</Text>
-
-      {/*parte para botoes de curtir e comentar*/}
+      <Text style={styles.postContent}>@{item.receiver_username}:{'\n'} {item.message}</Text> {/* Conteúdo do feedback + a marcação do Colaborador usando um "@" */}
       <View style={styles.actions}>
-        <TouchableOpacity onPress={() => handleLike(item.id)} style={styles.likeButton}>
+        <TouchableOpacity onPress={() => handleLike(item.id)} style={styles.likeButton}> {/* Botão de curtir */}
           <Image source={require('../assets/images/icons/heart.png')} style={[styles.heartIcon, likedPosts[item.id] && styles.likedHeartIcon]} />
-          {/*<Text style={styles.likeCount}>{item.likes}</Text> ainda nao tem likes na api */}
-          <Text style={styles.likeText}>{likedPosts[item.id] ? 'Curtiu' : 'Curtir'}</Text>
+          <Text style={styles.likeText}>{likedPosts[item.id] ? 'Curtiu' : 'Curtir'}</Text>  {/* Comparação para status entre "Curtir" e "Curtiu" - Um ou outro */}
         </TouchableOpacity>
-        <TouchableOpacity onPress={() => toggleComments(item.id)} style={styles.commentButton}>
-          <Image source={require('../assets/images/icons/feed-chat.png')} style={styles.chatIcon} />
-          <Text>Ver comentários</Text>
+        <TouchableOpacity onPress={() => toggleComments(item.id)} style={styles.commentButton}> {/* Botão de comentários */}
+          <Image source={require('../assets/images/icons/feed-chat.png')} style={styles.chatIcon} /> {/* Ícone de chat */}
+          <Text>Ver comentários</Text> {/* Texto para expandir e ver os comentários */}
         </TouchableOpacity>
       </View>
-
-      {/*expandir comentarios*/}
-      {expandedComments[item.id] && comments[item.id] && (
+      {expandedComments[item.id] && comments[item.id] && ( // Se os comentários foram expandidos e existem comentários, eles serão exibidos
         <View style={styles.commentsContainer}>
-
-          {/*percorre comentarios do feedback*/}
-          {comments[item.id].map((comment, index) => (
-            <View key={index} style={styles.comment}>
-
-              {/*pega usuario que enviou comentario*/}
+          {comments[item.id].map((comment, index) => ( // Mapeia os comentários para exibição
+            <View key={index} style={styles.comment}> {/* Exibe o nome do usuário que comentou, o comentário e sua data de envio */}
               <Text style={styles.commentUser}>{comment.username}: </Text>
-
-              {/*pega mensagem do comentario*/}
-              <Text>{comment.message.replace(/[{}]/g, '')}</Text>
-
-              {/*pega data do comentario*/}
+              <Text>{comment.message.replace(/[{}]/g, '')}</Text> {/* Remove caracteres especiais do comentário */}
+              {/* Exibe a data de envio do comentário em relação ao tempo atual */}
               <Text style={styles.commentTimestamp}>{formatDistanceToNow(new Date(comment.created_at), { addSuffix: true, locale: ptBR })}</Text>
-
             </View>
           ))}
         </View>
       )}
-
-      {/*novo comentario*/}
       <View style={styles.commentSection}>
         <TextInput
           style={styles.input}
@@ -249,10 +202,41 @@ const fetchComments = async (postId) => {
       </View>
     </View>
   );
+  // Obtém os 3 usuários com mais feedbacks enviados
+  const topUsers = userInfos
+    .map(user => ({
+      ...user,
+      feedbackCount: posts.filter(post => post.id_usersend === user.id).length,
+    }))
+    .sort((a, b) => b.feedbackCount - a.feedbackCount)
+    .slice(0, 3);
 
-  // Renderiza a tela
+  const loggedInUser = userInfos.find(user => user.email === loggedUserEmail);
+
   return (
-  <View style={styles.container}>
+    <View style={styles.container}>
+      {/* Container do ranking */}
+      <View style={styles.rankingContainer}>
+        {/* Top 3 mais envios de feedback */}
+        {topUsers.map((user, index) => (
+          <View key={user.id} style={styles.userRow}>
+            <Text style={styles.rank}>{index + 1}</Text>
+            <Image source={require('../assets/images/icons/icon-user.png')} style={styles.userImage} />
+            <Text style={styles.userName}>{user.name}</Text>
+            <Text style={styles.userScore}>{user.feedbackCount}</Text>
+          </View>
+        ))}
+        {/* Exibe o ranking do usuário logado: sua posição e quantidade de feedbacks enviados */}
+        {loggedInUser && (
+          <View style={[styles.userRow, styles.loggedInUserRow]}>
+            <Text style={styles.rank}>Você</Text>
+            <Image source={require('../assets/images/icons/icon-user.png')} style={styles.userImage} />
+            <Text style={styles.userName}>{loggedInUser.name}</Text> {/* Exibe o nome do usuário logado */}
+            <Text style={styles.userScore}>{posts.filter(post => post.id_usersend === loggedInUser.id).length}</Text> {/* Exibe a quantidade de feedbacks enviados pelo usuário logado */}
+          </View>
+        )}
+      </View>
+      {/* Lista de posts */}
       <FlatList
         data={posts.sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime())}
         renderItem={renderPost}
@@ -260,7 +244,6 @@ const fetchComments = async (postId) => {
         contentContainerStyle={styles.postsContainer}
       />
     </View>
-
   );
 }
 
@@ -268,13 +251,13 @@ const styles = StyleSheet.create({
   container: {
     paddingTop: 50,
     flex: 1,
-    backgroundColor: '#F9F9F9', // Cor de fundo clara
-    padding: 15, // Padding geral ao redor
+    backgroundColor: '#F9F9F9',
+    padding: 15,
   },
   rankingContainer: {
     borderWidth: 1,
     borderRadius: 8,
-    borderColor: '#E0E0E0',
+    borderColor: '#4B4B4B',
     backgroundColor: '#FFF',
     padding: 16,
     marginBottom: 16,
@@ -292,7 +275,7 @@ const styles = StyleSheet.create({
     borderBottomWidth: 0,
   },
   rank: {
-    fontSize: 16,
+    fontSize: 12,
     fontFamily: 'Poppins-Regular',
     fontWeight: 'bold',
     width: 24,
@@ -306,11 +289,11 @@ const styles = StyleSheet.create({
   },
   userName: {
     flex: 1,
-    fontSize: 16,
+    fontSize: 12,
     fontFamily: 'Poppins-Regular'
   },
   userScore: {
-    fontSize: 16,
+    fontSize: 12,
     fontWeight: 'bold',
     fontFamily: 'Poppins-Regular'
   },
@@ -323,7 +306,7 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
     shadowRadius: 4,
-    elevation: 2, // Sombra em Android
+    elevation: 2,
   },
   postHeader: {
     flexDirection: 'row',
@@ -337,7 +320,7 @@ const styles = StyleSheet.create({
     marginRight: 8,
   },
   postUserName: {
-    fontSize: 16,
+    fontSize: 12,
     fontFamily: 'Poppins-Regular',
     fontWeight: 'bold',
   },
@@ -347,20 +330,20 @@ const styles = StyleSheet.create({
     color: '#828282',
   },
   postContent: {
-    fontSize: 14,
+    fontSize: 12,
     fontFamily: 'Poppins-Regular',
     marginTop: 8,
     marginBottom: 16,
   },
-  postActions: {
+  actions: {
     flexDirection: 'row',
     justifyContent: 'space-between',
   },
-  actionButton: {
+  likeButton: {
     flexDirection: 'row',
     alignItems: 'center',
   },
-  actionIcon: {
+  heartIcon: {
     width: 20,
     height: 20,
     marginRight: 4,
@@ -368,10 +351,19 @@ const styles = StyleSheet.create({
   likedHeartIcon: {
     tintColor: 'red',
   },
-  actionText: {
-    fontSize: 14,
+  likeText: {
+    fontSize: 10,
     fontFamily: 'Poppins-Regular',
     color: '#5271FF',
+  },
+  commentButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  chatIcon: {
+    width: 18,
+    height: 18,
+    marginRight: 8
   },
   commentsContainer: {
     marginTop: 8,
@@ -387,87 +379,23 @@ const styles = StyleSheet.create({
     marginRight: 4,
   },
   commentTimestamp: {
-    fontSize: 12,
+    fontSize: 10,
     fontFamily: 'Poppins-Regular',
     color: '#828282',
     marginLeft: 8,
   },
-  addCommentContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginTop: 16,
-  },
-  chatIcon: {
-    width: 18,
-    height: 18,
-    marginRight: 8
-  },
-  addCommentInput: {
-    flex: 1,
-    borderColor: '#E0E0E0',
-    borderWidth: 1,
-    borderRadius: 8,
-    paddingHorizontal: 12,
-    paddingVertical: 8,
-  },
-  addCommentButton: {
-    marginLeft: 8,
-    padding: 8,
-    backgroundColor: '#5271FF',
-    borderRadius: 8,
-  },
-  addCommentButtonText: {
-    color: '#FFF',
-  },
-  likeCount: {
-    fontSize: 16,
-    paddingLeft: 5,
-  },
-  likeText: {
-    marginLeft: 5,
-  },
-  likeButton: {
-    width: 100,
-    height: 30,
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingLeft: 5,
-    marginRight: 8,
-    borderWidth: 1,
-    borderColor: '#FFFFFF',
-    backgroundColor: '#5271FF',
-    opacity: 0.4,
-    color: '#000000',
-    borderRadius: 15,
-  },
-  heartIcon: {
-    width: 20,
-    height: 20,
-    marginRight: 5,
-    tintColor: 'grey', // Default color
-  },
-  commentButton: {
-    width: 150,
-    height: 30,
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingLeft: 10,
-    marginRight: 8,
-    borderWidth: 1,
-    borderColor: '#FFFFFF',
-    backgroundColor: '#5271FF',
-    opacity: 0.4,
-    color: '#000000',
-    borderRadius: 15,
-  },
-  actions: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-commentSection: {
+  commentSection: {
     flexDirection: 'row',
     alignItems: 'center',
     marginTop: 10,
+  },
+  input: {
+    flex: 1,
+    borderColor: '#ccc',
+    borderWidth: 1,
+    borderRadius: 5,
+    paddingHorizontal: 10,
+    marginRight: 10,
   },
   commentPost: {
     width: 90,
@@ -483,16 +411,5 @@ commentSection: {
     borderRadius: 15,
     paddingTop: 5,
     paddingLeft: 12,
-  },
-  input: {
-    flex: 1,
-    borderColor: '#ccc',
-    borderWidth: 1,
-    borderRadius: 5,
-    paddingHorizontal: 10,
-    marginRight: 10,
-  },
-   comments: {
-    marginTop: 10,
   },
 });

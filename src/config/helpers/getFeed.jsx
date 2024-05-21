@@ -1,5 +1,3 @@
-// src/config/helpers/getFeed.jsx
-
 import configAPI from '../services/ConfigAPI';
 
 // Função para obter o feed principal

@@ -5,7 +5,7 @@ import styles from '../styles/PagesStyles';
 import ConfigAPI from '../config/services/ConfigAPI';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-
+//funcao para definir a tela de login
 export default function LoginScreen() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
