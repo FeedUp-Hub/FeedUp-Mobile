@@ -27,7 +27,7 @@ function App() {
   // Verifica se a tela de splash está ativa
   if (isLoading)
     return <SplashScreen />
-  return <AppNavigation initialRoute={'Home'} />
+  return <AppNavigation initialRoute={'Feed'} />
 }
 
 export default App;
