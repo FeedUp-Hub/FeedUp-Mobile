@@ -6,7 +6,6 @@ import { createStackNavigator } from '@react-navigation/stack';
 import Culture from '../layouts/CulturePage';
 import FeedScreen from '../layouts/FeedScreen';
 import Profile from '../layouts/UserProfile';
-import TermsUsage from '../components/UsageTerms';
 import Metrics from '../layouts/Metrics';
 import NozesTrading from '../extrasFuture/NozesTrading';
 import NewFeedUp from '../layouts/NewFeedUp';
@@ -23,7 +22,6 @@ const Stack = createStackNavigator(); // Criação do menu superior
 const HomeStack = () => (
   <Stack.Navigator screenOptions={{ headerShown: false }}>
     <Stack.Screen name="Feed" component={FeedScreen} />
-    <Stack.Screen name="TermsUsage" component={TermsUsage} />
     <Stack.Screen name="Metrics" component={Metrics} />
     <Stack.Screen name="NozesTrading" component={NozesTrading} />
   </Stack.Navigator>

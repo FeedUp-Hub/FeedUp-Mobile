@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { View, Text, Image, StyleSheet, TouchableOpacity } from 'react-native';
 import GestureRecognizer from 'react-native-swipe-gestures';
 import { useNavigation } from '@react-navigation/native';
-import styles from '../styles/PagesStyles';
 import cardPhoneChat from '../assets/images/cards/card-phone-chat.png';
 import cardChating from '../assets/images/cards/card-chating.png';
 import cardRespect from '../assets/images/cards/card-respect.png';
@@ -10,6 +9,7 @@ import cardBenefits from '../assets/images/cards/card-benefits.png';
 import AppLoading from "expo-app-loading";
 import { useFonts } from 'expo-font';
 import FONTS from "../styles/fonts/fonts";
+import styles from '../styles/PagesStyles';
 
 //A logica do carrossel está nessa funcao
 export default function OnboardingCarousel() {

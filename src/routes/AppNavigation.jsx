@@ -15,7 +15,7 @@ const AppNavigation = ({ initialRoute }) => (
     <Stack.Navigator initialRouteName={initialRoute} screenOptions={{ headerShown: false }}>
       <Stack.Screen name="Onboarding" component={OnboardingCarousel} />
       <Stack.Screen name="Login" component={LoginScreen} />
-      <Stack.Screen name="Home" component={DrawerNavigator} />
+      <Stack.Screen name="Home" component={DrawerNavigator}/>
       <Stack.Screen name="Thank You" component={ThankYouPage} />
       <Stack.Screen name="NewFeedUp" component={NewFeedUp} />
     </Stack.Navigator>

@@ -22,6 +22,7 @@ const cultureData = [
   { id: '21', image: require('../assets/images/values/behavior-21.png'), text: 'Acredita no poder do desenvolvimento pessoal e no aprendizado contínuo.' },
   { id: '22', image: require('../assets/images/values/behavior-22.png'), text: 'Ajuda a construir um ambiente de trabalho mais agradável e produtivo.' },
   { id: '23', image: require('../assets/images/values/behavior-23.png'), text: 'Sempre fomenta novas experiências para surpreender os clientes nas entregas.' },
+  { id: '24', image: require('../assets/images/values/behavior-24.png'), text: 'Trabalha de forma íntegra e transparente, sempre alinhando expectativas e restrições, seguindo planos concretos.' },
 ];
 
 export default cultureData;

@@ -6,14 +6,14 @@ import { useFonts } from "expo-font";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import ConfigAPI from '../config/services/ConfigAPI';
 
-//Função que retorna o Feed de posts e ranking
+// Função que retorna o Feed de posts e ranking
 export default function FeedScreen() {
 
   let [fontsLoaded] = useFonts({
     "Poppins-Regular": require("../assets/fonts/Poppins-Regular.ttf"),
+    "Poppins-Medium": require("../assets/fonts/Poppins-Medium.ttf"),
     "Poppins-Bold": require("../assets/fonts/Poppins-Bold.ttf"),
   });
-
   if (!fontsLoaded) {
     return null; // Você pode substituir por um componente de carregamento
   }
@@ -39,10 +39,8 @@ export default function FeedScreen() {
             Authorization: `Bearer ${token}`
           }
         });
-        // Atualiza os estados de posts e usuários
         setPosts(response.data.feedupFound);
         setUserInfos(response.data.users);
-
       } catch (error) {
         console.error('Erro na busca pelos feedbacks', error);
       }
@@ -91,6 +89,7 @@ export default function FeedScreen() {
       return [];
     }
   };
+
   // Função para curtir um post
   const handleLike = (postId) => {
     const updatedPosts = [...posts];
@@ -110,6 +109,7 @@ export default function FeedScreen() {
       setPosts(updatedPosts);
     }
   };
+
   // Função para adicionar um comentário
   const handleComment = async (postId) => {
     const commentText = newComments[postId];
@@ -124,7 +124,7 @@ export default function FeedScreen() {
           Authorization: `Bearer ${token}`,
         },
       });
-       // Se o comentário foi adicionado com sucesso, atualiza a lista de comentários
+      // Se o comentário foi adicionado com sucesso, atualiza a lista de comentários
       if (response.status === 201) {
         const newComment = {
           message: commentText,
@@ -139,10 +139,12 @@ export default function FeedScreen() {
       console.error('Erro ao adicionar comentário:', error);
     }
   };
+
   // Função para lidar com a mudança de texto em um comentário
   const handleCommentChange = (postId, text) => {
     setNewComments({ ...newComments, [postId]: text });
   };
+
   // Função para expandir ou recolher os comentários de um post
   const toggleComments = async (postId) => {
     setExpandedComments((prev) => ({ ...prev, [postId]: !prev[postId] }));
@@ -156,105 +158,141 @@ export default function FeedScreen() {
       }
     }
   };
+
   // Função para renderizar um post
   const renderPost = ({ item }) => (
-    <View style={styles.postContainer}>
-      <View style={styles.postHeader}>
-        <Image source={require('../assets/images/icons/icon-user.png')} style={styles.postUserImage} />
-        <View>
-          <Text style={styles.postUserName}>{item.sender_username}</Text> {/* Nome do usuário que enviou o feedback */}
-          <Text style={styles.postTimestamp}>{formatDistanceToNow(new Date(item.created_at), { addSuffix: true, locale: ptBR })}</Text> {/* Data de envio do feedback */}
+      <View style={styles.postContainer}>
+        <View style={styles.postHeader}>
+          <Image source={require('../assets/images/icons/icon-user.png')} style={styles.postUserImage} />
+          <View>
+            {/* Nome do usuário que enviou o feedback */}
+            <Text style={styles.postUserName}>{item.sender_username}</Text>
+            {/* Data de envio do feedback */}
+            <Text style={styles.postTimestamp}>{formatDistanceToNow(new Date(item.created_at), { addSuffix: true, locale: ptBR })}</Text>
+          </View>
         </View>
-      </View>
-      <Text style={styles.postContent}>@{item.receiver_username}:{'\n'} {item.message}</Text> {/* Conteúdo do feedback + a marcação do Colaborador usando um "@" */}
-      <View style={styles.actions}>
-        <TouchableOpacity onPress={() => handleLike(item.id)} style={styles.likeButton}> {/* Botão de curtir */}
-          <Image source={require('../assets/images/icons/heart.png')} style={[styles.heartIcon, likedPosts[item.id] && styles.likedHeartIcon]} />
-          <Text style={styles.likeText}>{likedPosts[item.id] ? 'Curtiu' : 'Curtir'}</Text>  {/* Comparação para status entre "Curtir" e "Curtiu" - Um ou outro */}
-        </TouchableOpacity>
-        <TouchableOpacity onPress={() => toggleComments(item.id)} style={styles.commentButton}> {/* Botão de comentários */}
-          <Image source={require('../assets/images/icons/feed-chat.png')} style={styles.chatIcon} /> {/* Ícone de chat */}
-          <Text>Ver comentários</Text> {/* Texto para expandir e ver os comentários */}
-        </TouchableOpacity>
-      </View>
-      {expandedComments[item.id] && comments[item.id] && ( // Se os comentários foram expandidos e existem comentários, eles serão exibidos
-        <View style={styles.commentsContainer}>
-          {comments[item.id].map((comment, index) => ( // Mapeia os comentários para exibição
-            <View key={index} style={styles.comment}> {/* Exibe o nome do usuário que comentou, o comentário e sua data de envio */}
-              <Text style={styles.commentUser}>{comment.username}: </Text>
-              <Text>{comment.message.replace(/[{}]/g, '')}</Text> {/* Remove caracteres especiais do comentário */}
-              {/* Exibe a data de envio do comentário em relação ao tempo atual */}
-              <Text style={styles.commentTimestamp}>{formatDistanceToNow(new Date(comment.created_at), { addSuffix: true, locale: ptBR })}</Text>
+        {/* Conteúdo do feedback + a marcação do Colaborador usando um "@" */}
+        <Text style={styles.postContent}>@{item.receiver_username}:{'\n'} {item.message}</Text>
+        <View style={styles.actions}>
+          {/* Botão de curtir */}
+          <TouchableOpacity onPress={() => handleLike(item.id)} style={styles.likeButton}>
+            <Image source={require('../assets/images/icons/heart.png')} style={[styles.heartIcon, likedPosts[item.id] && styles.likedHeartIcon]} />
+            <Text style={styles.likeText}>{likedPosts[item.id] ? 'Curtiu' : 'Curtir'}</Text>
+          </TouchableOpacity>
+          {/* Botão de comentários */}
+          <TouchableOpacity onPress={() => toggleComments(item.id)} style={styles.commentButton}>
+            {/* Ícone de chat */}
+            <Image source={require('../assets/images/icons/feed-chat.png')} style={styles.chatIcon} />
+            {/* Texto para expandir e ver os comentários */}
+            <Text>Ver comentários</Text>
+          </TouchableOpacity>
+        </View>
+        {expandedComments[item.id] && comments[item.id] && (
+            <View style={styles.commentsContainer}>
+              {comments[item.id].map((comment, index) => ( // Mapeia os comentários para exibição
+                  <View key={index} style={styles.comment}>
+                    <Text style={styles.commentUser}>{comment.username}: </Text>
+                    <Text>{comment.message.replace(/[{}]/g, '')}</Text> {/* Remove caracteres especiais do comentário */}
+                    {/* Exibe a data de envio do comentário em relação ao tempo atual */}
+                    <Text style={styles.commentTimestamp}>{formatDistanceToNow(new Date(comment.created_at), { addSuffix: true, locale: ptBR })}</Text>
+                  </View>
+              ))}
             </View>
-          ))}
+        )}
+        <View style={styles.commentSection}>
+          <TextInput
+              style={styles.input}
+              placeholder="Adicionar um comentário..."
+              value={newComments[item.id] || ''}
+              onChangeText={(text) => handleCommentChange(item.id, text)}
+          />
+          <TouchableOpacity onPress={() => handleComment(item.id)}>
+            <Text style={styles.commentPost}>Comentar</Text>
+          </TouchableOpacity>
         </View>
-      )}
-      <View style={styles.commentSection}>
-        <TextInput
-          style={styles.input}
-          placeholder="Adicionar um comentário..."
-          value={newComments[item.id] || ''}
-          onChangeText={(text) => handleCommentChange(item.id, text)}
-        />
-        <TouchableOpacity onPress={() => handleComment(item.id)}>
-          <Text style={styles.commentPost}>Comentar</Text>
-        </TouchableOpacity>
       </View>
-    </View>
   );
+
   // Obtém os 3 usuários com mais feedbacks enviados
   const topUsers = userInfos
-    .map(user => ({
-      ...user,
-      feedbackCount: posts.filter(post => post.id_usersend === user.id).length,
-    }))
-    .sort((a, b) => b.feedbackCount - a.feedbackCount)
-    .slice(0, 3);
+      .map(user => ({
+        ...user,
+        feedbackCount: posts.filter(post => post.id_usersend === user.id).length,
+      }))
+      .sort((a, b) => b.feedbackCount - a.feedbackCount)
+      .slice(0, 2);
 
   const loggedInUser = userInfos.find(user => user.email === loggedUserEmail);
 
   return (
-    <View style={styles.container}>
-      {/* Container do ranking */}
-      <View style={styles.rankingContainer}>
-        {/* Top 3 mais envios de feedback */}
-        {topUsers.map((user, index) => (
-          <View key={user.id} style={styles.userRow}>
-            <Text style={styles.rank}>{index + 1}</Text>
-            <Image source={require('../assets/images/icons/icon-user.png')} style={styles.userImage} />
-            <Text style={styles.userName}>{user.name}</Text>
-            <Text style={styles.userScore}>{user.feedbackCount}</Text>
-          </View>
-        ))}
-        {/* Exibe o ranking do usuário logado: sua posição e quantidade de feedbacks enviados */}
-        {loggedInUser && (
-          <View style={[styles.userRow, styles.loggedInUserRow]}>
-            <Text style={styles.rank}>Você</Text>
-            <Image source={require('../assets/images/icons/icon-user.png')} style={styles.userImage} />
-            <Text style={styles.userName}>{loggedInUser.name}</Text> {/* Exibe o nome do usuário logado */}
-            <Text style={styles.userScore}>{posts.filter(post => post.id_usersend === loggedInUser.id).length}</Text> {/* Exibe a quantidade de feedbacks enviados pelo usuário logado */}
-          </View>
-        )}
+      <View style={styles.container}>
+        <Image
+            source={require('../assets/images/logos/mini-logo.png')}
+            style={styles.logo}
+            resizeMode="contain"
+        />
+        <Text style={styles.title}>Ranking de Envio de Feedbacks</Text>
+        {/* Container do ranking */}
+        <View style={styles.rankingContainer}>
+          {/* Top 3 mais envios de feedback */}
+          {topUsers.length > 0 ? (
+              <>
+                <View style={styles.userRow}>
+                  <Text style={styles.rank}>1</Text>
+                  <Image source={require('../assets/images/icons/icon-user.png')} style={styles.userImage} />
+                  <Text style={styles.userName}>{topUsers[0].name}</Text>
+                  <Text style={styles.userScore}>{topUsers[0].feedbackCount}</Text>
+                </View>
+                {topUsers.length > 1 && (
+                    <View style={styles.userRow}>
+                      <Text style={styles.rank}>2</Text>
+                      <Image source={require('../assets/images/icons/icon-user.png')} style={styles.userImage} />
+                      <Text style={styles.userName}>{topUsers[1].name}</Text>
+                      <Text style={styles.userScore}>{topUsers[1].feedbackCount}</Text>
+                    </View>
+                )}
+                {topUsers.length > 2 && (
+                    <View style={styles.userRow}>
+                      <Text style={styles.rank}>3</Text>
+                      <Image source={require('../assets/images/icons/icon-user.png')} style={styles.userImage} />
+                      <Text style={styles.userName}>{topUsers[2].name}</Text>
+                      <Text style={styles.userScore}>{topUsers[2].feedbackCount}</Text>
+                    </View>
+                )}
+              </>
+          ) : null}
+          {/* Exibe o ranking do usuário logado: sua posição e quantidade de feedbacks enviados */}
+          {loggedInUser && (
+              <View style={[styles.userRow, styles.loggedInUserRow]}>
+                <Text style={styles.rank}>Você</Text>
+                <Image source={require('../assets/images/icons/icon-user.png')} style={styles.userImage} />
+                {/* Exibe o nome do usuário logado */}
+                <Text style={styles.userName}>{loggedInUser.name}</Text>
+                {/* Exibe a quantidade de feedbacks enviados pelo usuário logado */}
+                <Text style={styles.userScore}>{posts.filter(post => post.id_usersend === loggedInUser.id).length}</Text>
+              </View>
+          )}
+        </View>
+        <Text style={styles.title}>Feedbacks fornecidos</Text>
+        {/* Lista de posts */}
+        <FlatList
+            data={posts.sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime())}
+            renderItem={renderPost}
+            keyExtractor={(item) => item.id}
+            contentContainerStyle={styles.postsContainer}
+        />
       </View>
-      {/* Lista de posts */}
-      <FlatList
-        data={posts.sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime())}
-        renderItem={renderPost}
-        keyExtractor={(item) => item.id}
-        contentContainerStyle={styles.postsContainer}
-      />
-    </View>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    paddingTop: 50,
+  container: { // Estilo do container principal
+    paddingTop: 20,
     flex: 1,
     backgroundColor: '#F9F9F9',
     padding: 15,
   },
-  rankingContainer: {
+  rankingContainer: { // Estilo do container do ranking
     borderWidth: 1,
     borderRadius: 8,
     borderColor: '#4B4B4B',
@@ -262,42 +300,54 @@ const styles = StyleSheet.create({
     padding: 16,
     marginBottom: 16,
   },
-  userRow: {
+  logo: { // Estilo do logo
+    width: 150,
+    height: 50,
+    marginLeft: 90,
+    marginBottom: 40,
+  },
+  title: { // Estilo do título
+    fontSize: 15,
+    fontFamily: 'Poppins-Medium',
+    color: '#4B4B4B',
+    marginBottom: 10,
+  },
+  userRow: { // Estilo da linha do usuário
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    paddingVertical: 8,
+    paddingVertical: 5,
     borderBottomWidth: 1,
     borderBottomColor: '#E0E0E0',
   },
-  loggedInUserRow: {
-    backgroundColor: '#5271FF',
+  loggedInUserRow: { // Estilo da linha do usuário logado
+    backgroundColor: '#4B4B4B',
     borderBottomWidth: 0,
   },
-  rank: {
+  rank: { // Estilo do ranking
     fontSize: 12,
     fontFamily: 'Poppins-Regular',
     fontWeight: 'bold',
     width: 24,
     textAlign: 'center',
   },
-  userImage: {
+  userImage: { // Estilo da imagem do usuário
     width: 40,
     height: 40,
     borderRadius: 20,
     marginHorizontal: 8,
   },
-  userName: {
+  userName: { // Estilo do nome do usuário
     flex: 1,
     fontSize: 12,
     fontFamily: 'Poppins-Regular'
   },
-  userScore: {
+  userScore: { // Estilo da pontuação do usuário
     fontSize: 12,
     fontWeight: 'bold',
-    fontFamily: 'Poppins-Regular'
+    fontFamily: 'Poppins-Regular',
   },
-  postContainer: {
+  postContainer: { // Estilo do container do post
     backgroundColor: '#FFF',
     borderRadius: 8,
     padding: 16,
@@ -308,88 +358,88 @@ const styles = StyleSheet.create({
     shadowRadius: 4,
     elevation: 2,
   },
-  postHeader: {
+  postHeader: { // Estilo do cabeçalho do post
     flexDirection: 'row',
     alignItems: 'center',
     marginBottom: 8,
   },
-  postUserImage: {
+  postUserImage: { // Estilo da imagem do usuário do post
     width: 40,
     height: 40,
     borderRadius: 20,
     marginRight: 8,
   },
-  postUserName: {
+  postUserName: { // Estilo do nome do usuário do post
     fontSize: 12,
     fontFamily: 'Poppins-Regular',
     fontWeight: 'bold',
   },
-  postTimestamp: {
+  postTimestamp: { // Estilo do carimbo de data/hora do post
     fontSize: 12,
     fontFamily: 'Poppins-Regular',
     color: '#828282',
   },
-  postContent: {
+  postContent: { // Estilo do conteúdo do post
     fontSize: 12,
     fontFamily: 'Poppins-Regular',
     marginTop: 8,
     marginBottom: 16,
   },
-  actions: {
+  actions: { // Estilo das ações do post
     flexDirection: 'row',
     justifyContent: 'space-between',
   },
-  likeButton: {
+  likeButton: { // Estilo do botão de curtir
     flexDirection: 'row',
     alignItems: 'center',
   },
-  heartIcon: {
+  heartIcon: { // Estilo do ícone de coração
     width: 20,
     height: 20,
     marginRight: 4,
   },
-  likedHeartIcon: {
+  likedHeartIcon: { // Estilo do ícone de coração curtido
     tintColor: 'red',
   },
-  likeText: {
-    fontSize: 10,
+  likeText: { // Estilo do texto de curtir
+    fontSize: 12,
     fontFamily: 'Poppins-Regular',
     color: '#5271FF',
   },
-  commentButton: {
+  commentButton: { // Estilo do botão de comentários
     flexDirection: 'row',
     alignItems: 'center',
   },
-  chatIcon: {
+  chatIcon: { // Estilo do ícone de chat
     width: 18,
     height: 18,
     marginRight: 8
   },
-  commentsContainer: {
+  commentsContainer: { // Estilo do container de comentários
     marginTop: 8,
   },
-  comment: {
+  comment: { // Estilo do comentário
     flexDirection: 'row',
     alignItems: 'center',
     marginTop: 8,
   },
-  commentUser: {
+  commentUser: { // Estilo do nome do usuário do comentário
     fontWeight: 'bold',
     fontFamily: 'Poppins-Regular',
     marginRight: 4,
   },
-  commentTimestamp: {
-    fontSize: 10,
+  commentTimestamp: { // Estilo do carimbo de data/hora do comentário
+    fontSize: 12,
     fontFamily: 'Poppins-Regular',
     color: '#828282',
     marginLeft: 8,
   },
-  commentSection: {
+  commentSection: { // Estilo da seção de comentários
     flexDirection: 'row',
     alignItems: 'center',
     marginTop: 10,
   },
-  input: {
+  input: { // Estilo do campo de entrada de texto
     flex: 1,
     borderColor: '#ccc',
     borderWidth: 1,
@@ -397,7 +447,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     marginRight: 10,
   },
-  commentPost: {
+  commentPost: {  // Estilo do botão de postar comentário
     width: 90,
     height: 30,
     marginLeft: 10,

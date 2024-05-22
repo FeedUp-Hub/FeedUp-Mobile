@@ -223,19 +223,19 @@ const styles= StyleSheet.create({
     width: 100,
     height: 100,
     marginBottom: 10,
-    marginHorizontal: 20,
+    marginHorizontal: 20
   },
   menuTextHome: {
     fontSize: 18,
     fontFamily: 'Poppins-Regular',
     fontWeight: 'bold',
-    textAlign: 'center',
+    textAlign: 'center'
   },
   titleHome: {
     fontSize: 24,
     fontFamily: 'Poppins-Regular',
     marginBottom: 20,
-    fontWeight: 'bold',
+    fontWeight: 'bold'
   },
   titleSecondaryHome: {
     fontSize: 15,
@@ -250,7 +250,7 @@ const styles= StyleSheet.create({
   footerTextHome: {
     fontSize: 12,
     fontFamily: 'Poppins-Regular',
-    color: '#888',
+    color: '#888'
   },
   containerSignup: {
     flex: 1,
@@ -263,7 +263,7 @@ const styles= StyleSheet.create({
   },
   headerTextSignup: {
     fontSize: 24,
-    fontFamily: 'Poppins-Regular',
+    fontFamily: 'Poppins-Regular'
   },
   fieldsSignup: {
     marginBottom: 10,
@@ -276,12 +276,12 @@ const styles= StyleSheet.create({
     fontFamily: 'Poppins-Regular',
     borderRadius: 20,
     borderColor: 'black',
-    backgroundColor: 'gray',
+    backgroundColor: 'gray'
   },
   checkboxContainerSignup: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: 10,
+    marginBottom: 10
   },
   checkboxSignup: {
     width: 20,
@@ -291,7 +291,7 @@ const styles= StyleSheet.create({
     borderRadius: 3,
     justifyContent: 'center',
     alignItems: 'center',
-    marginRight: 10,
+    marginRight: 10
   },
   checkmarkSignup: {
     color: '#fff',
@@ -305,7 +305,7 @@ const styles= StyleSheet.create({
     marginBottom: 10,
     paddingStart: 24,
     paddingEnd: 24,
-    borderRadius: 20,
+    borderRadius: 20
 
   },
   loginTextSignup: {
@@ -313,27 +313,26 @@ const styles= StyleSheet.create({
     fontFamily: 'Poppins-Regular',
     color: '#454B60',
     fontWeight: 'bold',
-    marginLeft: 5,
+    marginLeft: 5
   },
    logoSignup: {
     width: 100,
     height: 100,
-    marginBottom: 20,
+    marginBottom: 20
   },
   TextButtonSignup: {
     color: 'white',
-    fontWeight: 'bold',
+    fontWeight: 'bold'
   },
   containerNewFeedup: {
     flex: 1,
     padding: 20,
-    paddingTop: 113,
-    backgroundColor: '#fff',
+    paddingTop: 20,
+    backgroundColor: '#fff'
   },
   headerTextNewFeedup: {
-    fontSize: 24,
-    fontFamily: 'Poppins-Regular',
-    fontWeight: 'bold',
+    fontSize: 20,
+    fontFamily: 'Poppins-Bold',
   },
   subtitleNewFeedup: {
     fontSize: 16,
@@ -348,10 +347,11 @@ const styles= StyleSheet.create({
     borderWidth: 1,
     marginBottom: 10,
     paddingHorizontal: 10,
-    borderRadius: 20,
+    borderRadius: 12,
     backgroundColor: 'white'
   },
   textAreaNewFeedup: {
+    paddingTop: 10,
     height: 100,
     textAlignVertical: 'top'
   },
@@ -370,7 +370,7 @@ const styles= StyleSheet.create({
   },
   buttonTextNewFeedup: {
     color: 'white',
-    fontWeight: 'bold',
+    fontWeight: 'bold'
   },
   checkboxNewFeedup: {
     width: 20,
@@ -386,66 +386,71 @@ const styles= StyleSheet.create({
     color: '#fff',
   },
   logoNewFeedup: {
-    width: 100,
-    height: 100,
-    marginBottom: 20
+    alignSelf: 'center',
+    width: 38,
+    height: 38,
+    marginBottom: 25
   },
   pickerGeralNewFeedup: {
   marginBottom: 10,
   borderWidth: 1,
-  borderRadius: 50
+  borderRadius: 10
   },
   contentThankYou: {
     justifyContent: 'center',
     alignItems: 'center',
-    padding: 28,
+    padding: 28
   },
   thanksFeedUp: {
     fontSize: 24,
     fontFamily: 'Poppins-Regular',
     fontWeight: 'bold',
-    color: '#5271FF',
+    color: '#5271FF'
   },
   logoThanksSubtitle: {
     paddingTop: 10,
     fontSize: 14,
     color: '#4B4B4B',
-    fontFamily: 'Poppins-Regular',
+    alignItems: 'center',
+    fontFamily: 'Poppins-Regular'
     },
   logoTitleSubtitleContainerThanks: {
     paddingTop: 20,
     flexDirection: 'column',
     alignItems: 'center',
-    paddingLeft: 16,
+    paddingLeft: 16
   },
   imageThanks: {
     paddingTop: 56,
-    width: 284,
-    height: 207,
+    width: 280,
+    height: 170,
     alignSelf: 'center',
+    marginBottom: 20
     },
   subtitleThanks: {
     paddingTop: 10,
     fontSize: 14,
     color: '#4B4B4B',
-    fontFamily: 'Poppins-Regular',
+    fontFamily: 'Poppins-Regular'
   },
   titleThanks: {
     paddingTop: 53,
     fontSize: 24,
     fontFamily: 'Poppins-Regular',
     color: '#4B4B4B',
-    fontWeight: 'bold',
+    fontWeight: 'bold'
   },
   logoThanks: {
     width: 50,
     height: 50,
-    marginRight: 10,
+    marginBottom: 10,
+    marginRight: 10
   },
   navButtonThanks: {
     width: 17,
     height: 17,
     color: '#000',
+    marginLeft: 10
   },
   headerThanks: {
     paddingTop: 54,
@@ -454,11 +459,11 @@ const styles= StyleSheet.create({
     color: '#ffffff',
     flexDirection: 'row',
     alignItems: 'center',
-    padding: 16,
+    padding: 16
   },
   containerThanks: {
     flex: 1,
-    backgroundColor: '#ffffff',
+    backgroundColor: '#ffffff'
   },
 });
 
