@@ -79,13 +79,13 @@ O aplicativo foi construído utilizando uma arquitetura componentizada conforme 
   - Tela para troca de Nozes por produtos (em breve)
 
 ## 🖼️ TELAS  
-- **Splash + Login:** Telas de carregamento inicial do aplicativo e autenticação (feita via integração com API do projeto).
+- **Splash + Login:** Telas de carregamento inicial do aplicativo e carregamento da tela de login.
 
-  ![GIF de Splash + Login](link_para_o_gif)
+  <img src="https://github.com/FeedUp-Hub/FeedUp-Mobile/blob/main/img/splash_e_telalogin.gif" width="200" height="400">
 
-- **Onboarding + Termos de uso:** Após o login o usuário é direcionado para o onboarding contendo 3 telas com opção de swipe para esquerda e direita e finalizando com página de Termos de Uso com necessidade do usuário concordar.
+- **Autenticação e Onboarding:** Autenticação (feita via integração com API do projeto) e direcionamento onboarding contendo 3 telas com opção de swipe para esquerda e direita e finalizando com página de Termos de Uso com necessidade do usuário concordar.
 
-  ![GIF de Onboarding + Termos de uso](link_para_o_gif)
+  <img src="https://github.com/FeedUp-Hub/FeedUp-Mobile/blob/main/img/autenticacao_e_onboarding.gif" width="200" height="400">
 
 - **Home:** Tela com lista de todos os FeedUps (feedbacks) recebidos pelos colaboradores, incluindo recurso para curtir feedbacks e fazer comentários.
 
@@ -150,11 +150,11 @@ Além dos testes realizados pelo QA, bloqueios foram adicionados no aplicativo p
 
 - **Bloqueio Login:** O usuário recebe uma mensagem de erro caso não preencha corretamente o formulário de autenticação.
 
-[PRINT COM TELA DE OBRIGADO EXIBINDO ALERTA DE ERRO NA TELA]
+<img src="https://github.com/FeedUp-Hub/FeedUp-Mobile/blob/main/img/bloqueio_login.gif" width="200" height="400">
 
 - **Bloqueio Novo Feedback:** O usuário recebe uma mensagem de erro caso não preencha corretamente o formulário de novo feedback.
 
-[PRINT COM TELA DE NOVO FEEDBACK EXIBINDO ALERTA DE ERRO NA TELA]
+<img src="https://github.com/FeedUp-Hub/FeedUp-Mobile/blob/main/img/bloqueio_novofeedback.gif" width="200" height="400">
 
 Comentários em branco: Comentários enviados em branco não são adicionados, essa tratativa foi implementada dentro da função handleComment() em FeedScreen.jsx.
 
