@@ -89,23 +89,22 @@ O aplicativo foi construído utilizando uma arquitetura componentizada conforme 
 
 - **Home:** Tela com lista de todos os FeedUps (feedbacks) recebidos pelos colaboradores, incluindo recurso para curtir feedbacks e fazer comentários.
 
-  ![GIF de Home](link_para_o_gif)
+<img src="./img/feedscreen.gif"  width="200" height="400">
 
 - **Feedback + Obrigado:** Tela para adicionar um novo FeedUp ao colaborador, onde o usuário pode além de escrever um feedback selecionar a qual valor cultural está associado e se a mensagem será postada anonimamente. Ao finalizar o usuário é direcionado a tela de agradecimento.
-
-  ![GIF de Feedback + Obrigado](link_para_o_gif)
+  
+<img src="./img/novofeedback.gif"  width="200" height="400">
+<img src="./img/obrigado.jpeg"  width="200" height="400">
 
 - **Cultura:** Tela com a listagem de todos os valores da companhia.
 
-  ![GIF de Cultura](link_para_o_gif)
+<img src="./img/culture.gif"  width="200" height="400">
 
 - **Profile:** Tela com o perfil do usuário logado, mostrando os feedbacks recebidos por ele.
 
-  ![GIF de Profile](link_para_o_gif)
-
 - **Métricas:** O usuário poderá visualizar indicadores gerais dos feedbacks enviados.
 
-  ![GIF de Métricas](link_para_o_gif)
+<img src="./img/metrics.gif"  width="200" height="400">
 
 ## 🚀 EXECUTANDO O PROJETO  
 Para executar o aplicativo localmente é necessário seguir os passos abaixo:
