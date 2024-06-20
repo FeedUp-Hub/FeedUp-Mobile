@@ -130,14 +130,8 @@ Para executar o aplicativo localmente é necessário seguir os passos abaixo:
     npm start –reset-cache
     
 `6. O aplicativo será exibido na tela do emulador`
-
-`7. Autentique com o usuário de testes abaixo:`
-
-    Usuário: fernando@ioasys.com
     
-    Senha: 1234
-    
-`8. Teste para envio de novo feedback:`
+`7. Teste para envio de novo feedback:`
 
     Enviar para usuário 'Fernando'.
     
