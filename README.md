@@ -27,7 +27,7 @@ O FeedUp revela percepções no trabalho que não poderiam ser encontradas em ne
 [Link para Figma do aplicativo](https://www.figma.com/design/RbgVwzwaBggNhu0Uzbmc8O/FeedUp?node-id=130%3A2805&t=giYM9WZ9586bGSNY-1)
 
 ## 🛠️ TECNOLOGIAS 
-- **React Native (vXXX):** Framework para desenvolvimento de aplicativos mobile em Android, iOS, entre outros.
+- **React Native (v51.0.0):** Framework para desenvolvimento de aplicativos mobile em Android, iOS, entre outros.
 - **IDE:** Código implementado com Android Studio.
 - **Imagem de dispositivo Android emulado** - Android Pixel 4 5.7 1080x2280 / Android Vanilla Icecream API arm64-v8a
 - **Bibliotecas principais:**
